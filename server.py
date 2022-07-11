@@ -26,7 +26,7 @@ def signup(account_list):
             return False
     newuser = {'username': username, 'password': password, 'bank account number': bankno}
     account_list.append(newuser)
-    f = open('account.json', 'w')
+    f = open('data/account.json', 'w')
     json_object = json.dumps(account_list, indent=4)
     f.write(json_object)
     f.close()
