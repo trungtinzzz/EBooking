@@ -1,9 +1,26 @@
-from operator import is_
 import socket
 import json
 import threading
 HOST = '127.0.0.1'
 PORT = 8000
+LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+NUMBERS = '0123456789'
+
+
+def checkvalidacc(username, password, bankno):
+    if len(username) < 5:
+        return False
+    for i in username:
+        if i not in LETTERS and i not in NUMBERS:
+            return False
+    if len(password) < 3:
+        return False
+    if len(bankno) != 10:
+        return False
+    for i in bankno:
+        if i not in NUMBERS:
+            return False
+    return True
 
 
 def login(account_list):
@@ -21,6 +38,9 @@ def signup(account_list):
     username = client.recv(1024).decode()
     password = client.recv(1024).decode()
     bankno = client.recv(1024).decode()
+    if not checkvalidacc(username, password, bankno):
+        client.send('Sign up fail'.encode())
+        return False
     for i in account_list:
         if username == i['username']:
             client.send('Sign up fail'.encode())
