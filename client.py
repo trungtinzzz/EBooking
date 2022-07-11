@@ -5,20 +5,20 @@ PORT = 8000
 
 
 def clogin():
-    print('Username:')
-    sock.send(input().encode())
-    print('Password:')
-    sock.send(input().encode())
+    ans = input('Username: ')
+    sock.send(ans.encode())
+    ans = input('Password: ')
+    sock.send(ans.encode())
     print(sock.recv(1024).decode())
 
 
 def csignup():
-    print('Username:')
-    sock.send(input().encode())
-    print('Password:')
-    sock.send(input().encode())
-    print('Bank account number:')
-    sock.send(input().encode())
+    ans = input('Username: ')
+    sock.send(ans.encode())
+    ans = input('Password: ')
+    sock.send(ans.encode())
+    ans = input('Bank account no: ')
+    sock.send(ans.encode())
     print(sock.recv(1024).decode())
 
 

@@ -5,10 +5,10 @@ HOST = '127.0.0.1'
 PORT = 8000
 
 
-def login(dictacc):
+def login(account_list):
     username = client.recv(1024).decode()
     password = client.recv(1024).decode()
-    for i in dictacc:
+    for i in account_list:
         if username == i['username'] and password == i['password']:
             client.send('Login successfully'.encode())
             return True
@@ -16,18 +16,18 @@ def login(dictacc):
     return False
 
 
-def signup(dictacc):
+def signup(account_list):
     username = client.recv(1024).decode()
     password = client.recv(1024).decode()
     bankno = client.recv(1024).decode()
-    for i in dictacc:
+    for i in account_list:
         if username == i['username']:
             client.send('Sign up fail'.encode())
             return False
     newuser = {'username': username, 'password': password, 'bank account number': bankno}
-    dictacc.append(newuser)
+    account_list.append(newuser)
     f = open('account.json', 'w')
-    json_object = json.dumps(dictacc, indent=4)
+    json_object = json.dumps(account_list, indent=4)
     f.write(json_object)
     f.close()
     client.send('Sign up successfully'.encode())
@@ -40,9 +40,9 @@ sock.listen(2)
 print('Waiting for connection......')
 client, addr = sock.accept()
 
-fileacc = open('account.json')
-dataacc = json.load(fileacc)
-fileacc.close()
+file_of_account = open('account.json')
+raw_account_list = json.load(file_of_account)
+file_of_account.close()
 print('Connected by', addr)
 is_off = False
 while not is_off:
@@ -50,8 +50,8 @@ while not is_off:
     if choose == '0':
         is_off = True
     elif choose == '1':
-        login(dataacc)
+        login(raw_account_list)
     elif choose == '2':
-        signup(dataacc)
+        signup(raw_account_list)
     
 sock.close()
