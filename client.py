@@ -1,7 +1,7 @@
 import socket
 
 HOST = '127.0.0.1'
-PORT = 8001
+PORT = 8002
 
 
 def clogin():
