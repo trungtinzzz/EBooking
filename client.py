@@ -1,7 +1,7 @@
 import socket
 
 HOST = '127.0.0.1'
-PORT = 8002
+PORT = 8000
 
 
 def clogin():
@@ -26,15 +26,21 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('You are connecting to', HOST, PORT)
 sock.connect((HOST, PORT))
 
-print('1.Log in \n 2.Sign up \n 3.Exit')
-choose = input()
-if choose == '1':
-    sock.send('1'.encode())
-    clogin()
-elif choose == '2':
-    sock.send('2'.encode())
-    csignup()
-elif choose == '3':
-    sock.send('3'.encode())
+is_off = False
+while not is_off:
+    #Menu
+    choices = ['0. Exit', '1. Login', '2. Sign up']
+    for i in choices:
+        print(i)
+    choose = input()
+    if choose == '0':
+        sock.send('0'.encode())
+        is_off = True
+    elif choose == '1':
+        sock.send('1'.encode())
+        clogin()
+    elif choose == '2':
+        sock.send('2'.encode())
+        csignup()
 
 sock.close()

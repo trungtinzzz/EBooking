@@ -1,3 +1,4 @@
+from operator import is_
 import socket
 import json
 HOST = '127.0.0.1'
@@ -28,6 +29,7 @@ def signup(dictacc):
     f = open('account.json', 'w')
     json_object = json.dumps(dictacc, indent=4)
     f.write(json_object)
+    f.close()
     client.send('Sign up successfully'.encode())
     return True
 
@@ -40,12 +42,16 @@ client, addr = sock.accept()
 
 fileacc = open('account.json')
 dataacc = json.load(fileacc)
+fileacc.close()
 print('Connected by', addr)
-
-choose = client.recv(1024).decode()
-if choose == '1':
-    login(dataacc)
-if choose == '2':
-    signup(dataacc)
-
+is_off = False
+while not is_off:
+    choose = client.recv(1024).decode()
+    if choose == '0':
+        is_off = True
+    elif choose == '1':
+        login(dataacc)
+    elif choose == '2':
+        signup(dataacc)
+    
 sock.close()
