@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import socket
 import json
 import pickle
@@ -88,6 +89,7 @@ def booking_menu(list_of_valid_room, ans, username):
                 if i['no'] in list_of_booked:
                     new_hot_order = {
                         "booker": username, 
+                        "order_time": order_data_str,
                         "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
                         "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
                     }
@@ -117,6 +119,46 @@ def menu_listener(username):
                 booking_menu(dict_of_hot[ans[0]], ans, username)
             else:
                 client.send('Fail'.encode())
+        elif ans == '2':
+            hotel_name = client.recv(1024).decode()
+            f = open('data/order.json')
+            order_dict = json.load(f)
+            f.close()
+            key = ''
+            not_found = False
+            for i in order_dict[username][::-1]:
+                if i['hotel'] == hotel_name:
+                    key = i['order_time']
+                    break
+            else:
+                not_found = True
+            if not_found:
+                client.send('Not found'.encode())
+            else:
+                key_time = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
+                if (key_time - datetime.datetime.now()).total_seconds() < 24.0 * 3600:
+                    client.send('OK'.encode())
+                    tmp_list = []
+                    for i in order_dict[username]:
+                        if i['order_time'] != key:
+                            tmp_list.append(i)
+                    order_dict[username] = tmp_list
+                    with open('data/order.json', 'w') as f:
+                        json.dump(order_dict, f)
+                    #delete in hoteldatajson
+                    f = open('data/hoteldata.json')
+                    hotel_dict = json.load(f)
+                    f.close()
+                    for i in hotel_dict[hotel_name]:
+                        tmp_list = []
+                        for j in i['booked']:
+                            if j['order_time'] != key:
+                                tmp_list.append(j)
+                        i['booked'] = tmp_list
+                    with open('data/hoteldata.json', 'w') as f:
+                        json.dump(hotel_dict, f)
+                else:
+                    client.send('Fail'.encode())    
         else:
             break
         

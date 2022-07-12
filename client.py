@@ -26,7 +26,7 @@ def booking_menu(list_of_no):
             ans = eval(sock.recv(1024).decode())
             print('Booking successfully')
             print('Total cost:', ans)
-            datetime_data = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M')
+            datetime_data = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
             sock.send(datetime_data.encode())
             break
         else:
@@ -34,7 +34,7 @@ def booking_menu(list_of_no):
         
 def menu():
     while True:
-        menu_choices = ['0. Exit', '1. Search for room']
+        menu_choices = ['0. Exit', '1. Search for room', '2. Cancel order']
         for i in menu_choices:
             print(i)
         m_choices = input('Your choice: ')
@@ -79,6 +79,17 @@ def menu():
                 booking_menu(list_of_no)
             elif ans == 'Fail':
                 print('Not found')
+        elif m_choices == '2':
+            ans = input('Hotel name: ')
+            sock.send(ans.encode())
+            list_of_cancel = []
+            ans = sock.recv(1024).decode()
+            if ans == 'OK':
+                print('Cancel successfully')
+            elif ans == 'Not found':
+                print('Not found')
+            else:
+                print('It is over 24 hours, you can not cancel your order')
         else: 
             break
     

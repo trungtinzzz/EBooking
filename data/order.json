@@ -1,1 +1,25 @@
-{"tin": [{"hotel": "hcmus", "order_time": "2022-3-3 10:30", "no": ["101"], "checkin": "2022-8-1", "checkout": "2022-8-5"}, {"hotel": "hcmus", "order_time": "2022-07-12 15:00", "no": ["101"], "checkin": "2022-11-03", "checkout": "2022-11-11"}], "phuc": [{"hotel": "hcmus", "order_time": "2022-5-3 9:30", "no": ["102"], "checkin": "2022-10-11", "checkout": "2022-10-15"}, {"hotel": "hcmus", "order_time": "2022-07-12 15:54", "no": ["101", "102"], "checkin": "2023-01-03", "checkout": "2023-01-05"}], "luan": [{"hotel": "hcmus", "order_time": "2022-07-12 14:52", "no": ["101"], "checkin": "2022-09-01", "checkout": "2022-09-05"}, {"hotel": "hcmus", "order_time": "2022-07-12 14:54", "no": ["102"], "checkin": "2022-12-10", "checkout": "2022-12-13"}, {"hotel": "hcmus", "order_time": "2022-07-12 15:57", "no": ["101"], "checkin": "2023-01-15", "checkout": "2023-01-17"}, {"hotel": "hcmus", "order_time": "2022-07-12 15:57", "no": ["102"], "checkin": "2023-02-01", "checkout": "2023-02-04"}]}
+{
+    "tin": [
+        {
+            "hotel": "hcmus",
+            "order_time": "2022-3-3 10:30:30",
+            "no": [
+                "101"
+            ],
+            "checkin": "2022-8-1",
+            "checkout": "2022-8-5"
+        }
+    ],
+    "phuc": [
+        {
+            "hotel": "hcmus",
+            "order_time": "2022-5-3 9:30:23",
+            "no": [
+                "102"
+            ],
+            "checkin": "2022-10-11",
+            "checkout": "2022-10-15"
+        }
+    ],
+    "luan": []
+}
