@@ -1,34 +1,28 @@
 {
    "hcmus":[
       {
-         "no": 101,
+         "no": "101",
          "kind": 1,
          "des": "Riverside",
          "price": 5,
          "booked": [
             {
-               "in_year": 2022,
-               "in_month": 8,
-               "in_date": 1,
-               "out_year": 2022,
-               "out_month": 8,
-               "out_date": 5
+               "booker": "tin",
+               "checkin": "2022-8-1",
+               "checkout": "2022-8-5"
             }
          ]
       },
       {
-         "no": 102,
+         "no": "102",
          "kind": 2,
          "des": "Penthouse",
          "price": 10,
          "booked": [
             {
-               "in_year": 2022,
-               "in_month": 10,
-               "in_date": 11,
-               "out_year": 2022,
-               "out_month": 10,
-               "out_date": 15
+               "booker": "phuc",
+               "checkin": "2022-10-11",
+               "checkout": "2022-10-15"
             }
          ]
       }

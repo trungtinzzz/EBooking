@@ -18,9 +18,9 @@ def login(account_list):
     for i in account_list:
         if username == i['username'] and password == i['password']:
             client.send('OK'.encode())
-            return True
+            return (True, username)
     client.send('Fail'.encode())
-    return False
+    return (False, '')
 
 
 def signup(account_list):
@@ -46,34 +46,61 @@ def search_for_room(dict_of_hotel, ans):
     for i in dict_of_hotel[ans[0]]:
         checkn = 0
         for j in i['booked']:
-            if j['out_year'] > ans[1].year:
+            checkout = datetime.datetime.strptime(j['checkout'], '%Y-%m-%d')
+            if checkout.year > ans[1].year:
                 checkn = checkn + 1
-            elif j['out_year'] == ans[1].year:
-                if j['out_month'] > ans[1].month:
+            elif checkout.year == ans[1].year:
+                if checkout.month > ans[1].month:
                     checkn = checkn + 1
-                elif j['out_month'] == ans[1].month:
-                    if j['out_date'] >= ans[1].date:
+                elif checkout.month == ans[1].month:
+                    if checkout.date >= ans[1].date:
                         checkn = checkn + 1
         if checkn == 0:
             list_of_available_room.append(i)
     return list_of_available_room
     
-def booking_menu(list_of_valid_room, ans):
-    is_out = False
-    ans = client.recv(1024).decode()
-    while not is_out:
-        if ans == '1':
-            list_of_booked = client.recv(1024).decode()
-            list_of_booked = eval(list_of_booked)
-            cost = 0
-            for i in list_of_valid_room:
-                if i['no'] in list_of_booked:
-                    cost = cost + i['price'] * ((ans[2] - ans[1]).days)
-            client.send(str(cost).encode())
-        else:
-            is_out = True
-
-def menu_listener():
+def booking_menu(list_of_valid_room, ans, username):
+    sub_ans = client.recv(1024).decode()
+    if sub_ans == '1':
+        list_of_booked = client.recv(1024).decode()
+        list_of_booked = eval(list_of_booked)
+        cost = 0
+        for i in list_of_valid_room:
+            if i['no'] in list_of_booked:
+                cost = cost + i['price'] * ((ans[2] - ans[1]).days)
+        client.send(str(cost).encode())
+        order_data_str = client.recv(1024).decode()
+        f = open('data/order.json')
+        order_dict = json.load(f)
+        f.close()
+        f = open('data/hoteldata.json')
+        hotel_dict = json.load(f)
+        f.close()
+        booked_to_insert = {
+            "no": list_of_booked,
+            "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
+            "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
+        }
+        new_order = {"hotel": ans[0], "order_time": order_data_str, "booked": booked_to_insert}
+        new_list = []
+        if username in order_dict:
+            new_list = order_dict[username]
+        new_list.append(new_order)
+        for i in hotel_dict[ans[0]]:
+            if i['no'] in list_of_booked:
+                new_hot_order = {
+                    "booker": username, 
+                    "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
+                    "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
+                }
+                i['booked'].append(new_hot_order)
+        with open('data/order.json', 'w') as f:
+            json.dump(order_dict, f)
+        with open('data/hoteldata.json', 'w') as f:
+            json.dump(hotel_dict, f)
+        
+        
+def menu_listener(username):
     while True:
         ans = client.recv(1024).decode()
         if ans == '1':
@@ -86,7 +113,7 @@ def menu_listener():
                 client.send('OK'.encode())
                 list_of_available_room = search_for_room(dict_of_hot, ans)
                 client.send(str(list_of_available_room).encode())
-                booking_menu(dict_of_hot[ans[0]], ans)
+                booking_menu(dict_of_hot[ans[0]], ans, username)
             else:
                 client.send('Fail'.encode())
         else:
@@ -95,9 +122,10 @@ def menu_listener():
 def init_listener():
     choose = client.recv(1024).decode()
     if choose == '1':
-        check = login(raw_account_list)
+        username = ''
+        check, username = login(raw_account_list)
         if check == True:
-            menu_listener()
+            menu_listener(username)
     elif choose == '2':
         signup(raw_account_list)
 
