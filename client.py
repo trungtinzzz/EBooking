@@ -49,7 +49,7 @@ def menu():
                     print('Number of bed:', i['kind'])
                     print('Description:', i['des'])
                     print('Price:', i['price'], 'dollar a night')
-                print("con cac")
+                print("Done")
             elif ans == 'Fail':
                 print('Not found')
         elif m_choices == '2':

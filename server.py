@@ -72,11 +72,6 @@ def menu_listener():
                 client.send('OK'.encode())
 
                 list_of_available_room = search_for_room(dict_of_hot, ans)
-                for i in list_of_available_room:
-                    print('No.:' , i['no'])
-                    print('Number of bed:', i['kind'])
-                    print('Description:', i['des'])
-                    print('Price:', i['price'], 'dollar a night')
                 client.send(str(list_of_available_room).encode())
             else:
                 client.send('Fail'.encode())
