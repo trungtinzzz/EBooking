@@ -39,13 +39,9 @@ def csignup():
     choose = input()
     if choose == '1':
         sock.send('1'.encode())
-        if not clogin():
-            menu()
     if choose == '2':
         sock.send('2'.encode())
-        if not csignup():
-            menu()
-            
+
             
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('You are connecting to', HOST, PORT)
