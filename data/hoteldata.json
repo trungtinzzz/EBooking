@@ -1,50 +1,35 @@
 {
    "hcmus":[
       {
-         "name":101,
-         "people":2,
-         "describe":"",
-         "booked":[
-            "1/1/2022 - 3/1/2022",
-            "2/2/2023 - 4/2/2023"
+         "no": 101,
+         "kind": 1,
+         "des": "Riverside",
+         "price": 5,
+         "booked": [
+            {
+               "in_year": 2022,
+               "in_month": 8,
+               "in_date": 1,
+               "out_year": 2022,
+               "out_month": 8,
+               "out_date": 5
+            }
          ]
       },
       {
-         "name":102,
-         "people":4,
-         "describe":"",
-         "booked":[
-            "1/1/2022 - 3/1/2022",
-            "2/2/2023 - 4/2/2023"
-         ]
-      },
-	{
-         "name":201,
-         "people":8,
-         "describe":"",
-         "booked":[
-            "1/1/2022 - 3/1/2022",
-            "2/2/2023 - 4/2/2023"
-         ]
-      }
-   ],
-   "hcmue":[
-      {
-         "name":101,
-         "people":2,
-         "describe":"",
-         "booked":[
-            "1/1/2022 - 3/1/2022",
-            "2/2/2023 - 4/2/2023"
-         ]
-      },
-      {
-         "name":102,
-         "people":4,
-         "describe":"",
-         "booked":[
-            "1/1/2022 - 3/1/2022",
-            "2/2/2023 - 4/2/2023"
+         "no": 102,
+         "kind": 2,
+         "des": "Penthouse",
+         "price": 10,
+         "booked": [
+            {
+               "in_year": 2022,
+               "in_month": 10,
+               "in_date": 11,
+               "out_year": 2022,
+               "out_month": 10,
+               "out_date": 15
+            }
          ]
       }
    ]
