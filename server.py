@@ -58,6 +58,20 @@ def search_for_room(dict_of_hotel, ans):
             list_of_available_room.append(i)
     return list_of_available_room
     
+def booking_menu(list_of_valid_room, ans):
+    is_out = False
+    ans = client.recv(1024).decode()
+    while not is_out:
+        if ans == '1':
+            list_of_booked = client.recv(1024).decode()
+            list_of_booked = eval(list_of_booked)
+            cost = 0
+            for i in list_of_valid_room:
+                if i['no'] in list_of_booked:
+                    cost = cost + i['price'] * ((ans[2] - ans[1]).days)
+            client.send(str(cost).encode())
+        else:
+            is_out = True
 
 def menu_listener():
     while True:
@@ -70,9 +84,9 @@ def menu_listener():
             file_of_hotel.close()
             if ans[0] in dict_of_hot:
                 client.send('OK'.encode())
-
                 list_of_available_room = search_for_room(dict_of_hot, ans)
                 client.send(str(list_of_available_room).encode())
+                booking_menu(dict_of_hot[ans[0]], ans)
             else:
                 client.send('Fail'.encode())
         else:

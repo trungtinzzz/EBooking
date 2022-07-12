@@ -1,3 +1,4 @@
+from secrets import choice
 import socket
 import datetime
 import pickle
@@ -5,10 +6,31 @@ import pickle
 HOST = '127.0.0.1'
 PORT = 8000
 
+def booking_menu(list_of_no):
+    is_out = False
+    while not is_out:
+        booking_choices = ['0. Search for other hotels', '2. Booking']
+        for i in booking_choices:
+            print(i)
+        b_choices = input('Your choice: ')
+        sock.send(b_choices.encode())
+        if b_choices == '1':
+            print('Enter 0 to stop')
+            list_of_booking = []
+            booking_choice = input('No. of rooms: ')
+            while booking_choice != '0' and booking_choice in list_of_no:
+                list_of_booking.append(booking_choice)
+            sock.send(str(list_of_booking).encode())
+            ans = int(sock.recv(1024).decode())
+            print('Booking successfully')
+            print('Total cost:', ans)
+        else:
+            is_out = True
+        
 def menu():
     is_off = False
     while not is_off:
-        menu_choices = ['0. Exit', '1. Search for room', '2. Booking room']
+        menu_choices = ['0. Exit', '1. Search for room']
         for i in menu_choices:
             print(i)
         m_choices = input('Your choice: ')
@@ -44,16 +66,19 @@ def menu():
             if ans == 'OK':
                 list_of_room = sock.recv(1024).decode()
                 list_hot = eval(list_of_room)
+                list_of_no = []
                 for i in list_hot:
                     print('No.:' , i['no'])
                     print('Number of bed:', i['kind'])
                     print('Description:', i['des'])
                     print('Price:', i['price'], 'dollar a night')
+                    list_of_no.append(i['no'])
                 print("Done")
+
             elif ans == 'Fail':
                 print('Not found')
-        elif m_choices == '2':
-            pass
+        else:
+            is_off = True
 
 def clogin():
     ans = input('Username: ')
@@ -66,7 +91,6 @@ def clogin():
         menu()
     else:
         print('Login fail')
-
 
 def csignup():
     ans = input('Username: ')
@@ -82,7 +106,6 @@ def csignup():
     else:
         print('Sign up fail')
 
-
 def start_menu():
     choices = ['0. Exit', '1. Login', '2. Sign up']
     for i in choices:
@@ -96,7 +119,6 @@ def start_menu():
         sock.send('2'.encode())
         csignup()
     
-
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('You are connecting to', HOST, PORT)
 sock.connect((HOST, PORT))
