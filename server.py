@@ -28,9 +28,9 @@ def login(account_list):
     password = client.recv(1024).decode()
     for i in account_list:
         if username == i['username'] and password == i['password']:
-            client.send('Login successfully'.encode())
+            client.send('1'.encode())
             return True
-    client.send('Login fail'.encode())
+    client.send('0'.encode())
     return False
 
 
@@ -39,19 +39,19 @@ def signup(account_list):
     password = client.recv(1024).decode()
     bankno = client.recv(1024).decode()
     if not checkvalidacc(username, password, bankno):
-        client.send('Sign up fail'.encode())
+        client.send('0'.encode())
         return False
     for i in account_list:
         if username == i['username']:
-            client.send('Sign up fail'.encode())
+            client.send('0'.encode())
             return False
     newuser = {'username': username, 'password': password, 'bank account number': bankno}
     account_list.append(newuser)
     f = open('data/account.json', 'w')
     json_object = json.dumps(account_list, indent=4)
     f.write(json_object)
+    client.send('1'.encode())
     f.close()
-    client.send('Sign up successfully'.encode())
     return True
 
 def handleClient(client, addr):
