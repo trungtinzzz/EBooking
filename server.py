@@ -4,7 +4,7 @@ import pickle
 import datetime
 
 HOST = '127.0.0.1'
-PORT = 8000
+PORT = 8003
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((HOST, PORT))
@@ -47,58 +47,59 @@ def search_for_room(dict_of_hotel, ans):
         checkn = 0
         for j in i['booked']:
             checkout = datetime.datetime.strptime(j['checkout'], '%Y-%m-%d')
-            if checkout.year > ans[1].year:
+            if checkout.date() > ans[1]:
                 checkn = checkn + 1
-            elif checkout.year == ans[1].year:
-                if checkout.month > ans[1].month:
-                    checkn = checkn + 1
-                elif checkout.month == ans[1].month:
-                    if checkout.date >= ans[1].date:
-                        checkn = checkn + 1
         if checkn == 0:
             list_of_available_room.append(i)
     return list_of_available_room
     
 def booking_menu(list_of_valid_room, ans, username):
-    sub_ans = client.recv(1024).decode()
-    if sub_ans == '1':
-        list_of_booked = client.recv(1024).decode()
-        list_of_booked = eval(list_of_booked)
-        cost = 0
-        for i in list_of_valid_room:
-            if i['no'] in list_of_booked:
-                cost = cost + i['price'] * ((ans[2] - ans[1]).days)
-        client.send(str(cost).encode())
-        order_data_str = client.recv(1024).decode()
-        f = open('data/order.json')
-        order_dict = json.load(f)
-        f.close()
-        f = open('data/hoteldata.json')
-        hotel_dict = json.load(f)
-        f.close()
-        booked_to_insert = {
-            "no": list_of_booked,
-            "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
-            "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
-        }
-        new_order = {"hotel": ans[0], "order_time": order_data_str, "booked": booked_to_insert}
-        new_list = []
-        if username in order_dict:
-            new_list = order_dict[username]
-        new_list.append(new_order)
-        for i in hotel_dict[ans[0]]:
-            if i['no'] in list_of_booked:
-                new_hot_order = {
-                    "booker": username, 
-                    "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
-                    "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
-                }
-                i['booked'].append(new_hot_order)
-        with open('data/order.json', 'w') as f:
-            json.dump(order_dict, f)
-        with open('data/hoteldata.json', 'w') as f:
-            json.dump(hotel_dict, f)
-        
+    while True:
+        sub_ans = client.recv(1024).decode()
+        if sub_ans == '1':
+            list_of_booked = client.recv(1024).decode()
+            list_of_booked = eval(list_of_booked)
+            cost = 0
+            for i in list_of_valid_room:
+                if i['no'] in list_of_booked:
+                    cost = cost + i['price'] * ((ans[2] - ans[1]).days)
+            client.send(str(cost).encode())
+            order_data_str = client.recv(1024).decode()
+            f = open('data/order.json')
+            order_dict = json.load(f)
+            f.close()
+            f = open('data/hoteldata.json')
+            hotel_dict = json.load(f)
+            f.close()
+            list_of_no = list_of_booked[:len(list_of_booked) - 1]
+            new_order = {
+                "hotel": ans[0], 
+                "order_time": order_data_str,
+                "no": list_of_no, 
+                "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
+                "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
+            }
+            new_list = []
+            if username in order_dict:
+                new_list = order_dict[username]
+            new_list.append(new_order)
+            order_dict[username] = new_list
+            for i in hotel_dict[ans[0]]:
+                if i['no'] in list_of_booked:
+                    new_hot_order = {
+                        "booker": username, 
+                        "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
+                        "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
+                    }
+                    i['booked'].append(new_hot_order)
+            if len(list_of_no) > 0:
+                with open('data/order.json', 'w') as f:
+                    json.dump(order_dict, f)
+                with open('data/hoteldata.json', 'w') as f:
+                    json.dump(hotel_dict, f)
+            break
+        else:
+            break
         
 def menu_listener(username):
     while True:
@@ -118,7 +119,7 @@ def menu_listener(username):
                 client.send('Fail'.encode())
         else:
             break
-
+        
 def init_listener():
     choose = client.recv(1024).decode()
     if choose == '1':

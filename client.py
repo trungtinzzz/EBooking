@@ -4,42 +4,42 @@ import datetime
 import pickle
 
 HOST = '127.0.0.1'
-PORT = 8000
+PORT = 8003
 
 def booking_menu(list_of_no):
-    booking_choices = ['0. Search for other hotels', '1. Booking']
-    for i in booking_choices:
-        print(i)
-    b_choices = input('Your choice: ')
-    sock.send(b_choices.encode())
-    if b_choices == '1':
-        print('Enter 0 to stop')
-        list_of_booking = []
-        booking_choice = input('No. of rooms: ')
-        if booking_choice != '0' and booking_choice in list_of_no:
-            list_of_booking.append(int(booking_choice))
-            while booking_choice != '0' and booking_choice in list_of_no:
-                booking_choice = input('No. of rooms: ')
+    while True:
+        booking_choices = ['0. Search for other hotels', '1. Booking']
+        for i in booking_choices:
+            print(i)
+        b_choices = input('Your choice: ')
+        sock.send(b_choices.encode())
+        if b_choices == '1':
+            print('Enter 0 to stop')
+            list_of_booking = []
+            booking_choice = input('No. of rooms: ')
+            if booking_choice != '0' and booking_choice in list_of_no:
                 list_of_booking.append(booking_choice)
-        sock.send(str(list_of_booking).encode())
-        ans = eval(sock.recv(1024).decode())
-        print('Booking successfully')
-        print('Total cost:', ans)
-        datetime_data = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M')
-        sock.send(datetime_data.encode())
-        
+                while booking_choice != '0' and booking_choice in list_of_no:
+                    booking_choice = input('No. of rooms: ')
+                    list_of_booking.append(booking_choice)
+            sock.send(str(list_of_booking).encode())
+            ans = eval(sock.recv(1024).decode())
+            print('Booking successfully')
+            print('Total cost:', ans)
+            datetime_data = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M')
+            sock.send(datetime_data.encode())
+            break
+        else:
+            break
         
 def menu():
-    is_off = False
-    while not is_off:
+    while True:
         menu_choices = ['0. Exit', '1. Search for room']
         for i in menu_choices:
             print(i)
         m_choices = input('Your choice: ')
         sock.send(m_choices.encode())
-        if m_choices == '0':
-            is_off = True
-        elif m_choices == '1':
+        if m_choices == '1':
             ans = input('Hotel name: ')
             print('Check in time: ')
             while True:
@@ -79,9 +79,10 @@ def menu():
                 booking_menu(list_of_no)
             elif ans == 'Fail':
                 print('Not found')
-        else:
-            is_off = True
-
+        else: 
+            break
+    
+        
 def clogin():
     ans = input('Username: ')
     sock.send(ans.encode())
