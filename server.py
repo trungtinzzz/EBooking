@@ -57,18 +57,16 @@ def signup(account_list):
 def handleClient(client, addr):
     file_of_account = open('account.json')
     raw_account_list = json.load(file_of_account)
-    file_of_account.close()
     print('Connected by', addr)
-    is_off = False
-    while not is_off:
-        choose = client.recv(1024).decode()
-        if choose == '0':
-            is_off = True
-        elif choose == '1':
+    choose = client.recv(1024).decode()
+    if choose == '1':
+        while not login(raw_account_list):
             login(raw_account_list)
-        elif choose == '2':
+    if choose == '2':
+        while not signup(raw_account_list):
             signup(raw_account_list)
     print("Client", addr, "finished")
+    file_of_account.close()
     client.close()
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
