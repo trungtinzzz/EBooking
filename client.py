@@ -9,7 +9,13 @@ def clogin():
     sock.send(ans.encode())
     ans = input('Password: ')
     sock.send(ans.encode())
-    print(sock.recv(1024).decode())
+    checklogin = sock.recv(1024).decode()
+    if checklogin == '1':
+        print('Login successful')
+        return True
+    if checklogin == '0':
+        print('Login fail')
+        return False
 
 
 def csignup():
@@ -19,28 +25,31 @@ def csignup():
     sock.send(ans.encode())
     ans = input('Bank account no: ')
     sock.send(ans.encode())
-    print(sock.recv(1024).decode())
+    checksignup = sock.recv(1024).decode()
+    if checksignup == '1':
+        print('Sign up successful')
+        return True
+    if checksignup == '0':
+        print('Sign up fail')
+        return False
 
 
+ def menu():
+    print('1.Login\t 2.Sign up')
+    choose = input()
+    if choose == '1':
+        sock.send('1'.encode())
+        if not clogin():
+            menu()
+    if choose == '2':
+        sock.send('2'.encode())
+        if not csignup():
+            menu()
+            
+            
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('You are connecting to', HOST, PORT)
 sock.connect((HOST, PORT))
-
-is_off = False
-while not is_off:
-    #Menu
-    choices = ['0. Exit', '1. Login', '2. Sign up']
-    for i in choices:
-        print(i)
-    choose = input()
-    if choose == '0':
-        sock.send('0'.encode())
-        is_off = True
-    elif choose == '1':
-        sock.send('1'.encode())
-        clogin()
-    elif choose == '2':
-        sock.send('2'.encode())
-        csignup()
+menu()
 
 sock.close()
