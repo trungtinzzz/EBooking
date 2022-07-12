@@ -159,6 +159,12 @@ def menu_listener(username):
                         json.dump(hotel_dict, f)
                 else:
                     client.send('Fail'.encode())    
+        elif ans == '3':
+            f = open('data/hoteldata.json')
+            hotel_dict = json.load(f)
+            f.close()
+            keys = list(hotel_dict.keys())
+            client.send(str(keys).encode())
         else:
             break
         
