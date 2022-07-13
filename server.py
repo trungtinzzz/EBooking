@@ -119,9 +119,9 @@ def booking_menu(list_of_valid_room, ans, username):
                     i['booked'].append(new_hot_order)
             if len(list_of_no) > 0:
                 with open('data/order.json', 'w') as f:
-                    json.dump(order_dict, f)
+                    json.dump(order_dict, f, indent=4)
                 with open('data/hoteldata.json', 'w') as f:
-                    json.dump(hotel_dict, f)
+                    json.dump(hotel_dict, f, indent = 4)
             break
         else:
             break
@@ -130,18 +130,20 @@ def menu_listener(username):
     while True:
         ans = client.recv(1024).decode()
         if ans == '1':
-            ans = client.recv(1024).decode()
-            ans = eval(ans)
-            file_of_hotel = open('data/hoteldata.json')
-            dict_of_hot = json.load(file_of_hotel)
-            file_of_hotel.close()
-            if ans[0] in dict_of_hot:
-                client.send('OK'.encode())
-                list_of_available_room = search_for_room(dict_of_hot, ans)
-                client.send(str(list_of_available_room).encode())
-                booking_menu(dict_of_hot[ans[0]], ans, username)
-            else:
+            hotel_name = client.recv(1024).decode()
+            f = open('data/hoteldata.json')
+            hotel_dict = json.load(f)
+            f.close()
+            if hotel_name not in hotel_dict:
                 client.send('Fail'.encode())
+            else:
+                client.send('OK'.encode())
+                ans = client.recv(1024).decode()
+                ans = eval(ans)
+                list_of_available_room = search_for_room(hotel_dict, ans)
+                client.send(str(list_of_available_room).encode())
+                if len(list_of_available_room) > 0:
+                    booking_menu(hotel_dict[ans[0]], ans, username)
         elif ans == '2':
             hotel_name = client.recv(1024).decode()
             f = open('data/order.json')

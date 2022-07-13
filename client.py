@@ -41,44 +41,48 @@ def menu():
         sock.send(m_choices.encode())
         if m_choices == '1':
             ans = input('Hotel name: ')
-            print('Check in time: ')
-            while True:
-                t_year = int(input('Year: '))
-                t_month = int(input('Month: '))
-                t_date = int(input('Date: '))
-                t_time_checkin = datetime.date(t_year, t_month, t_date)
-                if t_time_checkin < datetime.date.today():
-                    print('Check in date invalid')
-                else:
-                    break
-            print('Check out time: ') 
-            while True:
-                t_year = int(input('Year: '))
-                t_month = int(input('Month: '))
-                t_date = int(input('Date: '))
-                t_time_checkout = datetime.date(t_year, t_month, t_date)
-                if t_time_checkin > t_time_checkout:
-                    print('Check out time invalid')
-                else:
-                    break
-            info = (ans, t_time_checkin, t_time_checkout)
-            data_info = str(info)
-            sock.send(data_info.encode())
-            ans = sock.recv(1024).decode()
-            if ans == 'OK':
+            sock.send(ans.encode())
+            rep = sock.recv(1024).decode()
+            if rep == 'Fail':
+                print('Not found')
+            else:
+                print('Check in time: ')
+                while True:
+                    t_year = int(input('Year: '))
+                    t_month = int(input('Month: '))
+                    t_date = int(input('Date: '))
+                    t_time_checkin = datetime.date(t_year, t_month, t_date)
+                    if t_time_checkin < datetime.date.today():
+                        print('Check in date invalid')
+                    else:
+                        break
+                print('Check out time: ') 
+                while True:
+                    t_year = int(input('Year: '))
+                    t_month = int(input('Month: '))
+                    t_date = int(input('Date: '))
+                    t_time_checkout = datetime.date(t_year, t_month, t_date)
+                    if t_time_checkin > t_time_checkout:
+                        print('Check out time invalid')
+                    else:
+                        break
+                info = (ans, t_time_checkin, t_time_checkout)
+                data_info = str(info)
+                sock.send(data_info.encode())
                 list_of_room = sock.recv(1024).decode()
                 list_hot = eval(list_of_room)
-                list_of_no = []
-                for i in list_hot:
-                    print('No.:' , i['no'])
-                    print('Number of bed:', i['kind'])
-                    print('Description:', i['des'])
-                    print('Price:', i['price'], 'dollar a night')
-                    list_of_no.append(i['no'])
-                print("-"*20)
-                booking_menu(list_of_no)
-            elif ans == 'Fail':
-                print('Not found')
+                if len(list_hot) > 0:
+                    list_of_no = []
+                    for i in list_hot:
+                        print('No.:' , i['no'])
+                        print('Number of bed:', i['kind'])
+                        print('Description:', i['des'])
+                        print('Price:', i['price'], 'dollar a night')
+                        list_of_no.append(i['no'])
+                    print("-"*20)
+                    booking_menu(list_of_no)
+                else:
+                    print('No room available')
         elif m_choices == '2':
             ans = input('Hotel name: ')
             sock.send(ans.encode())
