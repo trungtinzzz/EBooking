@@ -1,5 +1,6 @@
 from secrets import choice
 import tkinter as tk
+import json
 import socket
 import datetime
 import pickle
@@ -72,8 +73,8 @@ class HomePage(tk.Frame):
 
         label_title = tk.Label(self, text="HOME PAGE")
 
-        btn_list = tk.Button(self,text="HOTEL LIST", command=lambda: appController.showPage(StartPage)).grid(row = 0, column = 0)
-        btn_info = tk.Button(self,text="YOUR BOOKING INFO", command=lambda: appController.showPage(StartPage)).grid(row = 0, column = 1)
+        btn_list = tk.Button(self,text="HOTEL LIST", command=lambda: appController.showPage(ListPage)).grid(row = 0, column = 0)
+        btn_info = tk.Button(self,text="YOUR BOOKING INFO", command=lambda: appController.showPage(InfoPage)).grid(row = 0, column = 1)
         btn_booking = tk.Button(self,text="BOOKING HOTEL", command=lambda: appController.showPage(StartPage)).grid(row = 0, column = 2)
 
         btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
@@ -83,7 +84,26 @@ class HomePage(tk.Frame):
         btn_info.pack()        
         btn_booking.pack()        
         btn_logout.pack()        
-    
+class ListPage(tk.Frame):
+    def __init__(self, parent, appController):
+        tk.Frame.__init__(self, parent)
+
+        label_title = tk.Label(self, text="HOTEL LIST")
+        appController.show_list_hol(self,sock)
+
+        btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
+
+class InfoPage(tk.Frame):
+    def __init__(self, parent, appController):
+        tk.Frame.__init__(self, parent)
+
+        label_title = tk.Label(self, text="YOUR BOOKING INFO")
+
+        #load account's order data
+        file_of_order = open('data/order.json')
+        raw_order_list = json.load(file_of_order)
+
+
 class App(tk.Tk):
     def __init__(self): 
         tk.Tk.__init__(self)
@@ -101,7 +121,7 @@ class App(tk.Tk):
 
 
         self.frames = {}
-        for F in (StartPage, HomePage, SignUpPage):
+        for F in (StartPage, HomePage, SignUpPage, ListPage, InfoPage):
             frame = F(container, self)
             frame.grid(row=0, column=0, sticky="nsew")
             self.frames[F] = frame 
@@ -130,7 +150,7 @@ class App(tk.Tk):
         sck.send(password.encode())
 
         #recv login check
-        login = sock.recv(1024).decode()
+        login = sck.recv(1024).decode()
         if login == 'Fail':
             curFrame.label_notice["text"] = "Login fail"
             return
@@ -164,7 +184,23 @@ class App(tk.Tk):
             return
         else:
             curFrame.label_notice["text"] = "Sign up success"
-            self.showPage(HomePage) 
+            self.showPage(StartPage) 
+
+    def show_list_hol(self,curFrame,sck: socket):
+        option = "LIST"
+        sck.send(option.encode()) 
+
+        list_of_hot = sck.recv(1024).decode()
+        list_of_hot = eval(list_of_hot)
+        print(list(list_of_hot))
+    
+    def show_info_ord(self,curFrame,sck: socket):
+        option = "INFO"
+        sck.send(choice.encode())
+
+        file_of_order = open('data/order.json')
+        raw_order_list = json.load(file_of_order)
+        file_of_order.close()
 
 def booking_menu(list_of_no):
     while True:
