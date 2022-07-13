@@ -14,11 +14,11 @@ class StartPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="LOG IN")
-        label_user = tk.Label(self, text="username ")
-        label_pswd = tk.Label(self, text="password ")
+        label_title = tk.Label(self, text="LOG IN", anchor=tk.CENTER)
+        label_user = tk.Label(self, text="username ", anchor=tk.CENTER)
+        label_pswd = tk.Label(self, text="password ", anchor=tk.CENTER)
 
-        self.label_notice = tk.Label(self,text="",bg="bisque2")
+        self.label_notice = tk.Label(self,text="",bg="bisque2", anchor=tk.CENTER)
         self.entry_user = tk.Entry(self,width=20,bg='light yellow')
         self.entry_pswd = tk.Entry(self,width=20,bg='light yellow')
 
@@ -27,28 +27,28 @@ class StartPage(tk.Frame):
         button_sign = tk.Button(self,text="SIGN UP", command=lambda: appController.showPage(SignUpPage)) 
         button_sign.configure(width=10)
         
-        label_title.pack()
-        label_user.pack()
-        self.entry_user.pack()
-        label_pswd.pack()
-        self.entry_pswd.pack()
-        self.label_notice.pack()
+        label_title.grid(row= 0, column= 0)
+        label_user.grid(row= 1, column= 0)
+        self.entry_user.grid(row= 2, column= 0)
+        label_pswd.grid(row= 3, column= 0)
+        self.entry_pswd.grid(row= 4, column= 0)
+        self.label_notice.grid(row= 5, column= 0)
 
-        button_log.pack()
-        button_sign.pack()
+        button_log.grid(row= 6, column= 0)
+        button_sign.grid(row= 6, column= 1)
 
 class SignUpPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="SIGN UP")
+        label_title = tk.Label(self, text="SIGN UP", anchor=tk.CENTER)
 
-        label_user = tk.Label(self, text="username ")
-        label_pswd = tk.Label(self, text="password ")
-        label_bank = tk.Label(self, text="bank number ")
+        label_user = tk.Label(self, text="username ", anchor=tk.CENTER)
+        label_pswd = tk.Label(self, text="password ", anchor=tk.CENTER)
+        label_bank = tk.Label(self, text="bank number ", anchor=tk.CENTER)
 
 
-        self.label_notice = tk.Label(self,text="",bg="bisque2")
+        self.label_notice = tk.Label(self,text="",bg="bisque2", anchor=tk.CENTER)
         self.entry_user = tk.Entry(self,width=20,bg='light yellow')
         self.entry_pswd = tk.Entry(self,width=20,bg='light yellow')
         self.entry_bank = tk.Entry(self,width=20,bg='light yellow')
@@ -56,22 +56,22 @@ class SignUpPage(tk.Frame):
         button_sign = tk.Button(self,text="SIGN UP", command=lambda: appController.csignup(self, sock)) 
         button_sign.configure(width=10)
         
-        label_title.pack()
-        label_user.pack()
-        self.entry_user.pack()
-        label_pswd.pack()
-        self.entry_pswd.pack()
-        label_bank.pack()
-        self.entry_bank.pack()
-        self.label_notice.pack()
+        label_title.grid(row= 0, column= 0)
+        label_user.grid(row= 1, column= 0)
+        self.entry_user.grid(row= 2, column= 0)
+        label_pswd.grid(row= 3, column= 0)
+        self.entry_pswd.grid(row= 4, column= 0)
+        label_bank.grid(row= 5, column= 0)
+        self.entry_bank.grid(row= 6, column= 0)
+        self.label_notice.grid(row= 7, column= 0)
 
-        button_sign.pack()
+        button_sign.grid(row= 8, column= 0)
 
 class HomePage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="HOME PAGE")
+        label_title = tk.Label(self, text="HOME PAGE", anchor=tk.CENTER)
 
         btn_list = tk.Button(self,text="HOTEL LIST", command=lambda: appController.showPage(ListPage)).grid(row = 0, column = 0)
         btn_info = tk.Button(self,text="YOUR BOOKING INFO", command=lambda: appController.showPage(InfoPage)).grid(row = 0, column = 1)
@@ -79,25 +79,29 @@ class HomePage(tk.Frame):
 
         btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
 
-        label_title.pack()
-        btn_list.pack()        
-        btn_info.pack()        
-        btn_booking.pack()        
-        btn_logout.pack()        
+        label_title.grid(row= 0, column= 0)
+        btn_list.grid(row= 1, column= 0)        
+        btn_info.grid(row= 1, column= 1)        
+        btn_booking.grid(row= 1, column= 2)        
+        btn_logout.grid(row= 2, column= 0)  
+
 class ListPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="HOTEL LIST")
+        label_title = tk.Label(self, text="HOTEL LIST", anchor=tk.CENTER)
+        
+        label_title.grid(row= 0, column= 0)
         appController.show_list_hol(self,sock)
 
         btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
-
+        btn_quit.grid(row= 1, column=0)
 class InfoPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="YOUR BOOKING INFO")
+        label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
+        label_title.grid(row= 0, column= 0)
 
         #load account's order data
         file_of_order = open('data/order.json')
