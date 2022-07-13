@@ -162,7 +162,26 @@ def menu_listener(username):
         else:
             break
         
-def init_listener():
+# def init_listener():
+#     option = client.recv(1024).decode()
+#     count = 0
+#     while(count < 50):
+#         if option == 'LOGIN':
+#             username = ''
+#             check, username = login(raw_account_list)
+#             if check == True:
+#                 menu_listener(username)
+#             option = 'X'
+#         elif option == 'SIGNUP':
+#             signup(raw_account_list)
+#             option = 'X'
+#         count += 1
+
+def handleClient(client, addr):
+    file_of_account = open('data/account.json')
+    raw_account_list = json.load(file_of_account)
+    print('Connected by', addr)
+    
     option = client.recv(1024).decode()
     count = 0
     while(count < 50):
@@ -176,12 +195,7 @@ def init_listener():
             signup(raw_account_list)
             option = 'X'
         count += 1
-
-def handleClient(client, addr):
-    file_of_account = open('data/account.json')
-    raw_account_list = json.load(file_of_account)
-    print('Connected by', addr)
-    init_listener()
+    
     print("Client", addr, "finished")
     file_of_account.close()
     client.close()
