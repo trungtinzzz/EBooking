@@ -14,7 +14,7 @@
       "price": 10,
       "booked": [
         {
-          "booker": "phuc",
+          "booker": "hongphuc",
           "order_time": "2022-5-3 9:30:23",
           "checkin": "2022-10-11",
           "checkout": "2022-10-15"
@@ -37,7 +37,7 @@
       "price": 10,
       "booked": [
         {
-          "booker": "tin",
+          "booker": "trungtin",
           "order_time": "2022-7-7 9:30:23",
           "checkin": "2022-11-15",
           "checkout": "2022-12-20"
