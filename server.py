@@ -7,11 +7,31 @@ import datetime
 HOST = '127.0.0.1'
 PORT = 8003
 
+LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+NUMBERS = '0123456789'
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((HOST, PORT))
 sock.listen(2)
 print('Waiting for connection......')
 client, addr = sock.accept()
+
+
+def checkvalidacc(username, password, bankno):
+    if len(username) < 5:
+        return False
+    for i in username:
+        if i not in LETTERS and i not in NUMBERS:
+            return False
+    if len(password) < 3:
+        return False
+    if len(bankno) != 10:
+        return False
+    for i in bankno:
+        if i not in NUMBERS:
+            return False
+    return True
+
 
 def login(account_list):
     username = client.recv(1024).decode()
@@ -28,6 +48,9 @@ def signup(account_list):
     username = client.recv(1024).decode()
     password = client.recv(1024).decode()
     bankno = client.recv(1024).decode()
+    if not checkvalidacc(username, password, bankno):
+        client.send('Fail'.encode())
+        return False
     for i in account_list:
         if username == i['username']:
             client.send('Fail'.encode())
