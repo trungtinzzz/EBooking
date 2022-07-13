@@ -1,5 +1,5 @@
 {
-  "tin": [
+  "trungtin": [
     {
       "hotel": "hcmue",
       "order_time": "2022-7-7 9:30:23",
@@ -10,7 +10,7 @@
       "checkout": "2022-12-20"
     }
   ],
-  "phuc": [
+  "hongphuc": [
     {
       "hotel": "hcmus",
       "order_time": "2022-5-3 9:30:23",
@@ -21,5 +21,5 @@
       "checkout": "2022-10-15"
     }
   ],
-  "luan": []
+  "caoluan": []
 }
