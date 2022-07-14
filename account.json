@@ -1,0 +1,32 @@
+[
+    {
+        "username": "caoluan",
+        "password": "123",
+        "bank account number": "1234567890"
+    },
+    {
+        "username": "trungtin",
+        "password": "234",
+        "bank account number": "2345678901"
+    },
+    {
+        "username": "hongphuc",
+        "password": "321",
+        "bank account number": "3213213210"
+    },
+    {
+        "username": "ronaldo",
+        "password": "123456",
+        "bank account number": "123456789"
+    },
+    {
+        "username": "honghai",
+        "password": "432",
+        "bank account number": "4567891230"
+    },
+    {
+        "username": "jennie",
+        "password": "1356",
+        "bank account number": "1357924680"
+    }
+]

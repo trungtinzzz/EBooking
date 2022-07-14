@@ -1,0 +1,48 @@
+{
+  "hcmus": [
+    {
+      "no": "101",
+      "kind": 1,
+      "des": "Riverside",
+      "price": 5,
+      "booked": []
+    },
+    {
+      "no": "102",
+      "kind": 2,
+      "des": "Penthouse",
+      "price": 10,
+      "booked": [
+        {
+          "booker": "hongphuc",
+          "order_time": "2022-5-3 9:30:23",
+          "checkin": "2022-10-11",
+          "checkout": "2022-10-15"
+        }
+      ]
+    }
+  ],
+  "hcmue": [
+    {
+      "no": "101",
+      "kind": 2,
+      "des": "Clean and fresh",
+      "price": 5,
+      "booked": []
+    },
+    {
+      "no": "201",
+      "kind": 4,
+      "des": "Your dream hotel",
+      "price": 10,
+      "booked": [
+        {
+          "booker": "trungtin",
+          "order_time": "2022-7-7 9:30:23",
+          "checkin": "2022-11-15",
+          "checkout": "2022-12-20"
+        }
+      ]
+    }
+  ]
+}
