@@ -34,7 +34,7 @@ def booking_menu(list_of_no):
         
 def menu():
     while True:
-        menu_choices = ['0. Exit', '1. Search for room', '2. Cancel order', '3. List of hotels']
+        menu_choices = ['0. Exit', '1. Search for room', '2. List of order made', '3. List of hotels']
         for i in menu_choices:
             print(i)
         m_choices = input('Your choice: ')
@@ -86,13 +86,22 @@ def menu():
         elif m_choices == '2':
             ans = input('Hotel name: ')
             sock.send(ans.encode())
-            ans = sock.recv(1024).decode()
-            if ans == 'OK':
-                print('Cancel successfully')
-            elif ans == 'Not found':
-                print('Not found')
+            list_of_order = eval(sock.recv(1024).decode())
+            if list_of_order == 0:
+                print('You have not made any order at this hotel')
             else:
-                print('It is over 24 hours, you can not cancel your order')
+                print(list_of_order)
+                code = input('Choose order to delete: ')
+                sock.send(code.encode())
+                ans = sock.recv(1024).decode()
+                if ans == 'OK':
+                    ans = sock.recv(1024).decode()
+                    if ans == 'OK':
+                        print('Cancel successfully')
+                    else:
+                        print('It is over 24 hours, you cannot delete your order')
+                elif ans == 'Not found':
+                    print('Not found')
         elif m_choices == '3':
             list_of_hot = sock.recv(1024).decode()
             list_of_hot = eval(list_of_hot)

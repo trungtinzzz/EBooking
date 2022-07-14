@@ -89,6 +89,9 @@ def booking_menu(list_of_valid_room, ans, username):
                     cost = cost + i['price'] * ((ans[2] - ans[1]).days)
             client.send(str(cost).encode())
             order_data_str = client.recv(1024).decode()
+            order_time = datetime.datetime.strptime(order_data_str, '%Y-%m-%d %H:%M:%S')
+            code = str(order_time.year) + str(order_time.month) + str(order_time.day)
+            code = code + str(order_time.hour) + str(order_time.minute) + str(order_time.second)
             f = open('data/order.json')
             order_dict = json.load(f)
             f.close()
@@ -103,11 +106,12 @@ def booking_menu(list_of_valid_room, ans, username):
                 "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
                 "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
             }
-            new_list = []
-            if username in order_dict:
-                new_list = order_dict[username]
-            new_list.append(new_order)
-            order_dict[username] = new_list
+            # new_list = []
+            # if username in order_dict:
+            #     new_list = order_dict[username]
+            # new_list.append(new_order)
+            # order_dict[username] = new_list
+            order_dict[username][code] = new_order
             for i in hotel_dict[ans[0]]:
                 if i['no'] in list_of_booked:
                     new_hot_order = {
@@ -149,41 +153,43 @@ def menu_listener(username):
             f = open('data/order.json')
             order_dict = json.load(f)
             f.close()
-            key = ''
-            not_found = False
-            for i in order_dict[username][::-1]:
-                if i['hotel'] == hotel_name:
-                    key = i['order_time']
-                    break
-            else:
-                not_found = True
-            if not_found:
-                client.send('Not found'.encode())
-            else:
-                key_time = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
-                if (key_time - datetime.datetime.now()).total_seconds() < 24.0 * 3600:
-                    client.send('OK'.encode())
-                    tmp_list = []
-                    for i in order_dict[username]:
-                        if i['order_time'] != key:
-                            tmp_list.append(i)
-                    order_dict[username] = tmp_list
-                    with open('data/order.json', 'w') as f:
-                        json.dump(order_dict, f)
-                    #delete in hoteldatajson
-                    f = open('data/hoteldata.json')
-                    hotel_dict = json.load(f)
-                    f.close()
-                    for i in hotel_dict[hotel_name]:
-                        tmp_list = []
-                        for j in i['booked']:
-                            if j['order_time'] != key:
-                                tmp_list.append(j)
-                        i['booked'] = tmp_list
-                    with open('data/hoteldata.json', 'w') as f:
-                        json.dump(hotel_dict, f)
+            list_of_order = []
+            for k, v in order_dict[username].items():
+                if v['hotel'] == hotel_name:
+                    list_of_order.append(k)
+            client.send(str(list_of_order).encode())
+            if len(list_of_order) > 0:
+                code = client.recv(1024).decode()
+                if code not in order_dict[username]:
+                    client.send('Not found'.encode())
                 else:
-                    client.send('Fail'.encode())    
+                    client.send('OK'.encode())
+                    key = order_dict[username][code]['order_time']
+                    key_time = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
+                    if (key_time - datetime.datetime.now()).total_seconds() < 24.0 * 3600:
+                        client.send('OK'.encode())
+                        # tmp_list = []
+                        # for i in order_dict[username]:
+                        #     if i['order_time'] != key:
+                        #         tmp_list.append(i)
+                        # order_dict[username] = tmp_list
+                        order_dict[username].pop(code)
+                        with open('data/order.json', 'w') as f:
+                            json.dump(order_dict, f, indent = 4)
+                        #delete in hoteldatajson
+                        f = open('data/hoteldata.json')
+                        hotel_dict = json.load(f)
+                        f.close()
+                        for i in hotel_dict[hotel_name]:
+                            tmp_list = []
+                            for j in i['booked']:
+                                if j['order_time'] != key:
+                                    tmp_list.append(j)
+                            i['booked'] = tmp_list
+                        with open('data/hoteldata.json', 'w') as f:
+                            json.dump(hotel_dict, f, indent = 4)
+                    else:
+                        client.send('Fail'.encode())    
         elif ans == '3':
             f = open('data/hoteldata.json')
             hotel_dict = json.load(f)
