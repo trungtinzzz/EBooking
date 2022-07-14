@@ -5,7 +5,27 @@ import pickle
 import datetime
 import threading
 HOST = '127.0.0.1'
-PORT = 8004
+PORT = 8003
+
+LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+NUMBERS = '0123456789'
+
+
+def checkvalidacc(username, password, bankno):
+    if len(username) < 5:
+        return False
+    for i in username:
+        if i not in LETTERS and i not in NUMBERS:
+            return False
+    if len(password) < 3:
+        return False
+    if len(bankno) != 10:
+        return False
+    for i in bankno:
+        if i not in NUMBERS:
+            return False
+    return True
+
 
 def login(account_list):
     username = client.recv(1024).decode()
@@ -29,6 +49,9 @@ def signup(account_list):
     bankno = client.recv(1024).decode()
     client.send(bankno.encode())
 
+    if not checkvalidacc(username, password, bankno):
+        client.send('Fail'.encode())
+        return False
     for i in account_list:
         if username == i['username']:
             client.send('Fail'.encode())
@@ -161,12 +184,12 @@ def menu_listener(username):
                         json.dump(hotel_dict, f)
                 else:
                     client.send('Fail'.encode())    
-        # elif ans == '3':
-        #     f = open('data/hoteldata.json')
-        #     hotel_dict = json.load(f)
-        #     f.close()
-        #     keys = list(hotel_dict.keys())
-        #     client.send(str(keys).encode())
+        elif ans == '3':
+            f = open('data/hoteldata.json')
+            hotel_dict = json.load(f)
+            f.close()
+            keys = list(hotel_dict.keys())
+            client.send(str(keys).encode())
         else:
             break
         

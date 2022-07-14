@@ -8,100 +8,113 @@ import pickle
 from click import option
 
 HOST = '127.0.0.1'
-PORT = 8004
+PORT = 8003
+
 
 class StartPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="LOG IN", anchor=tk.CENTER)
-        label_user = tk.Label(self, text="username ", anchor=tk.CENTER)
-        label_pswd = tk.Label(self, text="password ", anchor=tk.CENTER)
+        label_wel = tk.Label(self, text="Welcome to E-Booking")
+        label_title = tk.Label(self, text="LOG IN")
+        label_user = tk.Label(self, text="username ")
+        label_pswd = tk.Label(self, text="password ")
+        label_ques = tk.Label(self, text="don't have an account? ")
 
-        self.label_notice = tk.Label(self,text="",bg="bisque2", anchor=tk.CENTER)
-        self.entry_user = tk.Entry(self,width=20,bg='light yellow')
-        self.entry_pswd = tk.Entry(self,width=20,bg='light yellow')
+        self.label_notice = tk.Label(self, text="", bg="bisque2",)
+        self.entry_user = tk.Entry(self, width=20, bg='light yellow')
+        self.entry_pswd = tk.Entry(self, width=20, bg='light yellow')
 
-        button_log = tk.Button(self,text="LOG IN", command=lambda: appController.clogin(self, sock)) 
+        button_log = tk.Button(self, text="LOG IN", command=lambda: appController.clogin(self, sock))
         button_log.configure(width=10)
-        button_sign = tk.Button(self,text="SIGN UP", command=lambda: appController.showPage(SignUpPage)) 
+        button_sign = tk.Button(self, text="SIGN UP", command=lambda: appController.showPage(SignUpPage))
         button_sign.configure(width=10)
-        
-        label_title.grid(row= 0, column= 3)
-        label_user.grid(row= 1, column= 3)
-        self.entry_user.grid(row= 2, column= 3)
-        label_pswd.grid(row= 3, column= 3)
-        self.entry_pswd.grid(row= 4, column= 3)
-        self.label_notice.grid(row= 5, column= 3)
 
-        button_log.grid(row= 6, column= 1)
-        button_sign.grid(row= 6, column= 4)
+        label_wel.grid(row=0, column=0, padx=140, pady=15)
+        label_title.grid(row=1, column=0, padx=140)
+        label_user.grid(row=2, column=0, padx=140)
+        self.entry_user.grid(row=3, column=0, padx=140)
+        label_pswd.grid(row=4, column=0, padx=140)
+        self.entry_pswd.grid(row=5, column=0, padx=140)
+        self.label_notice.grid(row=6, column=0, padx=140, pady=5)
+
+        button_log.grid(row=7, column=0, pady=10)
+        label_ques.grid(row=8, column=0)
+        button_sign.grid(row=9, column=0)
+
 
 class SignUpPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="SIGN UP", anchor=tk.CENTER)
+        label_title = tk.Label(self, text="SIGN UP")
 
-        label_user = tk.Label(self, text="username ", anchor=tk.CENTER)
-        label_pswd = tk.Label(self, text="password ", anchor=tk.CENTER)
-        label_bank = tk.Label(self, text="bank number ", anchor=tk.CENTER)
+        label_user = tk.Label(self, text="username ")
+        label_pswd = tk.Label(self, text="password ")
+        label_bank = tk.Label(self, text="bank number ")
 
 
-        self.label_notice = tk.Label(self,text="",bg="bisque2", anchor=tk.CENTER)
-        self.entry_user = tk.Entry(self,width=20,bg='light yellow')
-        self.entry_pswd = tk.Entry(self,width=20,bg='light yellow')
-        self.entry_bank = tk.Entry(self,width=20,bg='light yellow')
+        self.label_notice = tk.Label(self, text="", bg="bisque2")
+        self.entry_user = tk.Entry(self, width=20, bg='light yellow')
+        self.entry_pswd = tk.Entry(self, width=20, bg='light yellow')
+        self.entry_bank = tk.Entry(self, width=20, bg='light yellow')
 
-        button_sign = tk.Button(self,text="SIGN UP", command=lambda: appController.csignup(self, sock)) 
+        button_sign = tk.Button(self, text="SIGN UP", command=lambda: appController.csignup(self, sock))
         button_sign.configure(width=10)
-        
-        label_title.grid(row= 0, column= 0)
-        label_user.grid(row= 1, column= 0)
-        self.entry_user.grid(row= 2, column= 0)
-        label_pswd.grid(row= 3, column= 0)
-        self.entry_pswd.grid(row= 4, column= 0)
-        label_bank.grid(row= 5, column= 0)
-        self.entry_bank.grid(row= 6, column= 0)
-        self.label_notice.grid(row= 7, column= 0)
+        button_quit = tk.Button(self, text="BACK", command=lambda: appController.showPage(StartPage))
 
-        button_sign.grid(row= 8, column= 0)
+        label_title.grid(row=0, column=0, padx=140, pady=20)
+        label_user.grid(row=1, column=0, padx=140)
+        self.entry_user.grid(row=2, column=0, padx=140)
+        label_pswd.grid(row=3, column=0, padx=140)
+        self.entry_pswd.grid(row=4, column=0, padx=140)
+        label_bank.grid(row=5, column=0, padx=140)
+        self.entry_bank.grid(row=6, column=0, padx=140)
+        self.label_notice.grid(row=7, column=0, padx=140, pady=10)
+
+        button_sign.grid(row=8, column=0, pady=5)
+        button_quit.grid(row=9, column=0)
 
 
 class HomePage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="HOME PAGE", anchor=tk.CENTER)
+        label_title = tk.Label(self, text="HOME PAGE")
 
-        btn_list = tk.Button(self,text="HOTEL LIST", command=lambda: appController.showPage(ListPage)).grid(row = 0, column = 0)
-        btn_info = tk.Button(self,text="YOUR BOOKING INFO", command=lambda: appController.showPage(InfoPage)).grid(row = 0, column = 1)
-        btn_booking = tk.Button(self,text="BOOKING HOTEL", command=lambda: appController.showPage(StartPage)).grid(row = 0, column = 2)
+        btn_list = tk.Button(self, text="HOTEL LIST", command=lambda: appController.showPage(ListPage))
+        btn_info = tk.Button(self, text="YOUR BOOKING INFO", command=lambda: appController.showPage(InfoPage))
+        btn_booking = tk.Button(self, text="BOOKING HOTEL", command=lambda: appController.showPage(StartPage))
 
         btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
 
-        label_title.grid(row= 0, column= 0)
+        label_title.grid(row=0, column=1, pady=20)
+        btn_list.grid(row=1, column=0, padx=20)
+        btn_info.grid(row=1, column=1, padx=10)
+        btn_booking.grid(row=1, column=2, padx=18)
+        btn_logout.grid(row=2, column=1, pady=100)
 
-        btn_logout.grid(row= 2, column= 0)  
 
 class ListPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
+        print("start list")
+        label_title = tk.Label(self, text="HOTEL LIST")
 
-        label_title = tk.Label(self, text="HOTEL LIST", anchor=tk.CENTER)
+        label_title.grid(row=0, column=0)
+        print("title")
+        appController.show_list(self, sock)
+        print("end")
+        btn_quit = tk.Button(self, text="Back", command=lambda: appController.showPage(HomePage))
+        btn_quit.grid(row=1, column=0)
 
-        label_title.grid(row= 0, column= 0)
-        appController.show_list_hol(self,sock)
-
-        btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
-        btn_quit.grid(row= 1, column=0)
 
 class InfoPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
         label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
-        label_title.grid(row= 0, column= 0)
+        label_title.grid(row=0, column=0)
 
         #load account's order data
         file_of_order = open('data/order.json')
@@ -113,7 +126,7 @@ class App(tk.Tk):
         tk.Tk.__init__(self)
 
         self.title("E-Booking")
-        self.geometry("300x200")
+        self.geometry("400x300")
         self.resizable(width=False, height=False)
 
         container = tk.Frame()
@@ -193,23 +206,16 @@ class App(tk.Tk):
             return
         else:
             curFrame.label_notice["text"] = "Sign up success"
-            self.showPage(StartPage) 
+            self.showPage(StartPage)
 
-    # def show_list_hol(self,curFrame,sck: socket):
-    #     option = "LIST"
-    #     sck.send(option.encode())
-    #
-    #     list_of_hot = sck.recv(1024).decode()
-    #     # list_of_hot = eval(list_of_hot)
-    #     print(list(list_of_hot))
-    #
-    # def show_info_ord(self,curFrame,sck: socket):
-    #     option = "INFO"
-    #     sck.send(choice.encode())
+    def show_list(self,curFrame,sck: socket):
+        ans = '3'
+        sck.send(ans.encode())
+        print(ans)
+        list_of_hot = sck.recv(1024).decode()
+        list_of_hot = eval(list_of_hot)
+        print(list(list_of_hot))
 
-        file_of_order = open('data/order.json')
-        raw_order_list = json.load(file_of_order)
-        file_of_order.close()
 
 def booking_menu(list_of_no):
     while True:
