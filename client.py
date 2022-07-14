@@ -6,6 +6,19 @@ import pickle
 HOST = '127.0.0.1'
 PORT = 8003
 
+def recvimage(hotelname, dicthotel):
+    root = Tk()
+    imagelist =[]
+    for i in range(len(dicthotel)):
+        f = open('client/'+str(i)+'.jpg', 'wb')
+        data = sock.recv(1000000)
+        f.write(data)
+        imagelist.append(ImageTk.PhotoImage(Image.open('client/'+str(i)+'.jpg')))
+        Label(image=imagelist[i]).grid(row=0,column=i)
+        Label(text=dicthotel[hotelname][i]['no']).grid(row=1,column=i)
+    root.mainloop()
+
+    
 def booking_menu(list_of_no):
     while True:
         booking_choices = ['0. Search for other hotels', '1. Booking']
