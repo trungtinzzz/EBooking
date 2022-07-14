@@ -8,7 +8,7 @@ import pickle
 from click import option
 
 HOST = '127.0.0.1'
-PORT = 8000
+PORT = 8004
 
 
 class StartPage(tk.Frame):
@@ -21,7 +21,7 @@ class StartPage(tk.Frame):
         label_pswd = tk.Label(self, text="password ")
         label_ques = tk.Label(self, text="don't have an account? ")
 
-        self.label_notice = tk.Label(self, text="", bg="bisque2", )
+        self.label_notice = tk.Label(self, text="", bg="bisque2",)
         self.entry_user = tk.Entry(self, width=20, bg='light yellow')
         self.entry_pswd = tk.Entry(self, width=20, bg='light yellow')
 
@@ -52,6 +52,7 @@ class SignUpPage(tk.Frame):
         label_user = tk.Label(self, text="username ")
         label_pswd = tk.Label(self, text="password ")
         label_bank = tk.Label(self, text="bank number ")
+
 
         self.label_notice = tk.Label(self, text="", bg="bisque2")
         self.entry_user = tk.Entry(self, width=20, bg='light yellow')
@@ -85,13 +86,13 @@ class HomePage(tk.Frame):
         btn_info = tk.Button(self, text="YOUR BOOKING INFO", command=lambda: appController.showPage(InfoPage))
         btn_booking = tk.Button(self, text="BOOKING HOTEL", command=lambda: appController.showPage(StartPage))
 
-        btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
+        # btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
 
         label_title.grid(row=0, column=1, pady=20)
         btn_list.grid(row=1, column=0, padx=20)
         btn_info.grid(row=1, column=1, padx=10)
         btn_booking.grid(row=1, column=2, padx=18)
-        btn_logout.grid(row=2, column=1, pady=100)
+        # btn_logout.grid(row=2, column=1, pady=100)
 
 
 class ListPage(tk.Frame):
@@ -115,13 +116,13 @@ class InfoPage(tk.Frame):
         label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
         label_title.grid(row=0, column=0)
 
-        # load account's order data
+        #load account's order data
         file_of_order = open('data/order.json')
         raw_order_list = json.load(file_of_order)
 
 
 class App(tk.Tk):
-    def __init__(self):
+    def __init__(self): 
         tk.Tk.__init__(self)
 
         self.title("E-Booking")
@@ -131,23 +132,25 @@ class App(tk.Tk):
         container = tk.Frame()
         container.configure(bg="grey")
 
-        container.pack(side="top", fill="both", expand=True)
+        container.pack(side="top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
+
 
         self.frames = {}
         for F in (StartPage, HomePage, SignUpPage):
             frame = F(container, self)
             frame.grid(row=0, column=0, sticky="nsew")
-            self.frames[F] = frame
+            self.frames[F] = frame 
+
 
         self.frames[StartPage].tkraise()
-
+        
     def showPage(self, FrameClass):
         self.frames[FrameClass].tkraise()
 
-    def clogin(self, curFrame, sck: socket):
-        # get username and password
+    def clogin(self,curFrame,sck: socket):
+        #get username and password
         username = curFrame.entry_user.get()
         password = curFrame.entry_pswd.get()
 
@@ -155,17 +158,17 @@ class App(tk.Tk):
             curFrame.label_notice["text"] = "Fields cannot be emty"
             return
 
-        # send cmd option
+        #send cmd option
         option = "LOGIN"
         sck.send(option.encode())
 
-        # send account info
+        #send account info
         sck.send(username.encode())
         sck.recv(1024)
         sck.send(password.encode())
         sck.recv(1024)
 
-        # recv login check
+        #recv login check
         login = sck.recv(1024).decode()
         if login == 'Fail':
             curFrame.label_notice["text"] = "Login fail"
@@ -174,8 +177,8 @@ class App(tk.Tk):
             curFrame.label_notice["text"] = "Login success"
             self.showPage(HomePage)
 
-    def csignup(self, curFrame, sck: socket):
-        # get account info
+    def csignup(self,curFrame,sck: socket):
+        #get account info
         username = curFrame.entry_user.get()
         password = curFrame.entry_pswd.get()
         bankno = curFrame.entry_bank.get()
@@ -183,12 +186,12 @@ class App(tk.Tk):
         if username == "" or password == "" or bankno == "":
             curFrame.label_notice["text"] = "Fields cannot be emty"
             return
-
-        # send cmd option
+        
+        #send cmd option
         option = "SIGNUP"
-        sck.send(option.encode())
+        sck.send(option.encode()) 
 
-        # send account info
+        #send account info
         sck.send(username.encode())
         sck.recv(1024)
         sck.send(password.encode())
@@ -196,7 +199,7 @@ class App(tk.Tk):
         sck.send(bankno.encode())
         sck.recv(1024)
 
-        # recv signup check
+        #recv signup check
         signup = sck.recv(1024).decode()
         if signup == 'Fail':
             curFrame.label_notice["text"] = "Sign up fail"
@@ -205,7 +208,7 @@ class App(tk.Tk):
             curFrame.label_notice["text"] = "Sign up success"
             self.showPage(StartPage)
 
-    def show_list(self, curFrame, sck: socket):
+    def show_list(self,curFrame,sck: socket):
         ans = '3'
         sck.send(ans.encode())
         list_of_hot = sck.recv(1024).decode()
@@ -238,8 +241,7 @@ def booking_menu(list_of_no):
             break
         else:
             break
-
-
+        
 def menu():
     while True:
         menu_choices = ['0. Exit', '1. Search for room', '2. Cancel order', '3. List of hotels']
@@ -259,7 +261,7 @@ def menu():
                     print('Check in date invalid')
                 else:
                     break
-            print('Check out time: ')
+            print('Check out time: ') 
             while True:
                 t_year = int(input('Year: '))
                 t_month = int(input('Month: '))
@@ -278,12 +280,12 @@ def menu():
                 list_hot = eval(list_of_room)
                 list_of_no = []
                 for i in list_hot:
-                    print('No.:', i['no'])
+                    print('No.:' , i['no'])
                     print('Number of bed:', i['kind'])
                     print('Description:', i['des'])
                     print('Price:', i['price'], 'dollar a night')
                     list_of_no.append(i['no'])
-                print("-" * 20)
+                print("-"*20)
                 booking_menu(list_of_no)
             elif ans == 'Fail':
                 print('Not found')
@@ -301,7 +303,7 @@ def menu():
             list_of_hot = sock.recv(1024).decode()
             list_of_hot = eval(list_of_hot)
             print(list(list_of_hot))
-        else:
+        else: 
             break
 
 
