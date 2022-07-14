@@ -152,7 +152,7 @@ class App(tk.Tk):
         # send cmd option
         option = "LOGIN"
         sck.send(option.encode())
-        print("send option login")
+        print("finish send option login")
         # send account info
         sck.send(username.encode())
         sck.send(password.encode())

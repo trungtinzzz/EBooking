@@ -16,6 +16,7 @@ def login(account_list):
     for i in account_list:
         if username == i['username'] and password == i['password']:
             client.send('OK'.encode())
+            print("send OK")
             return (True, username)
     client.send('Fail'.encode())
     return (False, '')
