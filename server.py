@@ -4,10 +4,13 @@ import json
 import pickle
 import datetime
 import threading
+
 HOST = '127.0.0.1'
 PORT = 8003
 
+
 def login(account_list):
+    print("start login")
     username = client.recv(1024).decode()
     password = client.recv(1024).decode()
     for i in account_list:
@@ -35,6 +38,7 @@ def signup(account_list):
     client.send('OK'.encode())
     return True
 
+
 def search_for_room(dict_of_hotel, ans):
     print(ans[0])
     list_of_available_room = []
@@ -47,7 +51,8 @@ def search_for_room(dict_of_hotel, ans):
         if checkn == 0:
             list_of_available_room.append(i)
     return list_of_available_room
-    
+
+
 def booking_menu(list_of_valid_room, ans, username):
     while True:
         sub_ans = client.recv(1024).decode()
@@ -68,9 +73,9 @@ def booking_menu(list_of_valid_room, ans, username):
             f.close()
             list_of_no = list_of_booked[:len(list_of_booked) - 1]
             new_order = {
-                "hotel": ans[0], 
+                "hotel": ans[0],
                 "order_time": order_data_str,
-                "no": list_of_no, 
+                "no": list_of_no,
                 "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
                 "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
             }
@@ -82,7 +87,7 @@ def booking_menu(list_of_valid_room, ans, username):
             for i in hotel_dict[ans[0]]:
                 if i['no'] in list_of_booked:
                     new_hot_order = {
-                        "booker": username, 
+                        "booker": username,
                         "order_time": order_data_str,
                         "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
                         "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
@@ -96,7 +101,8 @@ def booking_menu(list_of_valid_room, ans, username):
             break
         else:
             break
-        
+
+
 def menu_listener(username):
     while True:
         ans = client.recv(1024).decode()
@@ -139,7 +145,7 @@ def menu_listener(username):
                     order_dict[username] = tmp_list
                     with open('data/order.json', 'w') as f:
                         json.dump(order_dict, f)
-                    #delete in hoteldatajson
+                    # delete in hoteldatajson
                     f = open('data/hoteldata.json')
                     hotel_dict = json.load(f)
                     f.close()
@@ -152,16 +158,17 @@ def menu_listener(username):
                     with open('data/hoteldata.json', 'w') as f:
                         json.dump(hotel_dict, f)
                 else:
-                    client.send('Fail'.encode())    
-        elif ans == '3':
-            f = open('data/hoteldata.json')
-            hotel_dict = json.load(f)
-            f.close()
-            keys = list(hotel_dict.keys())
-            client.send(str(keys).encode())
+                    client.send('Fail'.encode())
+                    # elif ans == '3':
+        #     f = open('data/hoteldata.json')
+        #     hotel_dict = json.load(f)
+        #     f.close()
+        #     keys = list(hotel_dict.keys())
+        #     client.send(str(keys).encode())
         else:
             break
-        
+
+
 # def init_listener():
 #     option = client.recv(1024).decode()
 #     count = 0
@@ -181,10 +188,11 @@ def handleClient(client, addr):
     file_of_account = open('data/account.json')
     raw_account_list = json.load(file_of_account)
     print('Connected by', addr)
-    
+
     option = client.recv(1024).decode()
+    print(option)
     count = 0
-    while(count < 50):
+    while (count < 50):
         if option == 'LOGIN':
             username = ''
             check, username = login(raw_account_list)
@@ -195,10 +203,11 @@ def handleClient(client, addr):
             signup(raw_account_list)
             option = 'X'
         count += 1
-    
+
     print("Client", addr, "finished")
     file_of_account.close()
     client.close()
+
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((HOST, PORT))
@@ -206,15 +215,14 @@ sock.listen(2)
 print('Waiting for connection......')
 
 nClient = 0
-#allow up to 50 clients access
-while(nClient < 50):
+# allow up to 50 clients access
+while (nClient < 50):
     client, addr = sock.accept()
 
-    thr = threading.Thread(target=handleClient, args=(client,addr))
+    thr = threading.Thread(target=handleClient, args=(client, addr))
     thr.daemon = False
     thr.start()
 
     nClient += 1
 
-#input()    
 sock.close()
