@@ -98,13 +98,13 @@ class HomePage(tk.Frame):
 class ListPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
-        print("start list")
+
         label_title = tk.Label(self, text="HOTEL LIST")
 
         label_title.grid(row=0, column=0)
-        print("title")
+
         appController.show_list(self, sock)
-        print("end")
+
         btn_quit = tk.Button(self, text="Back", command=lambda: appController.showPage(HomePage))
         btn_quit.grid(row=1, column=0)
 
@@ -211,7 +211,6 @@ class App(tk.Tk):
     def show_list(self,curFrame,sck: socket):
         ans = '3'
         sck.send(ans.encode())
-        print(ans)
         list_of_hot = sck.recv(1024).decode()
         list_of_hot = eval(list_of_hot)
         print(list(list_of_hot))
@@ -306,26 +305,11 @@ def menu():
             print(list(list_of_hot))
         else: 
             break
-    
 
-# def start_menu():
-#     choices = ['0. Exit', '1. Login', '2. Sign up']
-#     for i in choices:
-#         print(i)
-#     choose = input('Your choice: ')
 
-#     if choose == '1':
-#         sock.send('1'.encode())
-#         clogin()
-#     elif choose == '2':
-#         sock.send('2'.encode())
-#         csignup()
-    
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('You are connecting to', HOST, PORT)
 sock.connect((HOST, PORT))
-
-#start_menu()
 
 app = App()
 app.mainloop()
