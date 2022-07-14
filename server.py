@@ -8,6 +8,7 @@ HOST = '127.0.0.1'
 PORT = 8003
 
 def login(account_list):
+    print("start login")
     username = client.recv(1024).decode()
     password = client.recv(1024).decode()
     for i in account_list:
@@ -153,12 +154,12 @@ def menu_listener(username):
                         json.dump(hotel_dict, f)
                 else:
                     client.send('Fail'.encode())    
-        elif ans == '3':
-            f = open('data/hoteldata.json')
-            hotel_dict = json.load(f)
-            f.close()
-            keys = list(hotel_dict.keys())
-            client.send(str(keys).encode())
+        # elif ans == '3':
+        #     f = open('data/hoteldata.json')
+        #     hotel_dict = json.load(f)
+        #     f.close()
+        #     keys = list(hotel_dict.keys())
+        #     client.send(str(keys).encode())
         else:
             break
         
@@ -183,6 +184,7 @@ def handleClient(client, addr):
     print('Connected by', addr)
     
     option = client.recv(1024).decode()
+    print(option)
     count = 0
     while(count < 50):
         if option == 'LOGIN':
@@ -216,5 +218,4 @@ while(nClient < 50):
 
     nClient += 1
 
-#input()    
 sock.close()

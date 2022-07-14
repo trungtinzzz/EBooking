@@ -27,15 +27,15 @@ class StartPage(tk.Frame):
         button_sign = tk.Button(self,text="SIGN UP", command=lambda: appController.showPage(SignUpPage)) 
         button_sign.configure(width=10)
         
-        label_title.grid(row= 0, column= 0)
-        label_user.grid(row= 1, column= 0)
-        self.entry_user.grid(row= 2, column= 0)
-        label_pswd.grid(row= 3, column= 0)
-        self.entry_pswd.grid(row= 4, column= 0)
-        self.label_notice.grid(row= 5, column= 0)
+        label_title.grid(row= 0, column= 3)
+        label_user.grid(row= 1, column= 3)
+        self.entry_user.grid(row= 2, column= 3)
+        label_pswd.grid(row= 3, column= 3)
+        self.entry_pswd.grid(row= 4, column= 3)
+        self.label_notice.grid(row= 5, column= 3)
 
-        button_log.grid(row= 6, column= 0)
-        button_sign.grid(row= 6, column= 1)
+        button_log.grid(row= 6, column= 1)
+        button_sign.grid(row= 6, column= 4)
 
 class SignUpPage(tk.Frame):
     def __init__(self, parent, appController):
@@ -80,32 +80,31 @@ class HomePage(tk.Frame):
         btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
 
         label_title.grid(row= 0, column= 0)
-        btn_list.grid(row= 1, column= 0)        
-        btn_info.grid(row= 1, column= 1)        
-        btn_booking.grid(row= 1, column= 2)        
+
         btn_logout.grid(row= 2, column= 0)  
 
-class ListPage(tk.Frame):
-    def __init__(self, parent, appController):
-        tk.Frame.__init__(self, parent)
-
-        label_title = tk.Label(self, text="HOTEL LIST", anchor=tk.CENTER)
-        
-        label_title.grid(row= 0, column= 0)
-        appController.show_list_hol(self,sock)
-
-        btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
-        btn_quit.grid(row= 1, column=0)
-class InfoPage(tk.Frame):
-    def __init__(self, parent, appController):
-        tk.Frame.__init__(self, parent)
-
-        label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
-        label_title.grid(row= 0, column= 0)
-
-        #load account's order data
-        file_of_order = open('data/order.json')
-        raw_order_list = json.load(file_of_order)
+# class ListPage(tk.Frame):
+#     def __init__(self, parent, appController):
+#         tk.Frame.__init__(self, parent)
+#
+#         label_title = tk.Label(self, text="HOTEL LIST", anchor=tk.CENTER)
+#
+#         label_title.grid(row= 0, column= 0)
+#         appController.show_list_hol(self,sock)
+#
+#         btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
+#         btn_quit.grid(row= 1, column=0)
+#
+# class InfoPage(tk.Frame):
+#     def __init__(self, parent, appController):
+#         tk.Frame.__init__(self, parent)
+#
+#         label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
+#         label_title.grid(row= 0, column= 0)
+#
+#         #load account's order data
+#         file_of_order = open('data/order.json')
+#         raw_order_list = json.load(file_of_order)
 
 
 class App(tk.Tk):
@@ -113,7 +112,7 @@ class App(tk.Tk):
         tk.Tk.__init__(self)
 
         self.title("E-Booking")
-        self.geometry("500x200")
+        self.geometry("300x200")
         self.resizable(width=False, height=False)
 
         container = tk.Frame()
@@ -125,7 +124,7 @@ class App(tk.Tk):
 
 
         self.frames = {}
-        for F in (StartPage, HomePage, SignUpPage, ListPage, InfoPage):
+        for F in (StartPage, HomePage, SignUpPage):
             frame = F(container, self)
             frame.grid(row=0, column=0, sticky="nsew")
             self.frames[F] = frame 
@@ -141,14 +140,14 @@ class App(tk.Tk):
         username = curFrame.entry_user.get()
         password = curFrame.entry_pswd.get()
 
-        if username == "" or password == "":
-            curFrame.label_notice["text"] = "Fields cannot be emty"
-            return
-        
+        # if username == "" or password == "":
+        #     curFrame.label_notice["text"] = "Fields cannot be emty"
+        #     return
+        print("start def clogin")
         #send cmd option
         option = "LOGIN"
-        sck.send(option.encode()) 
-
+        sck.send(option.encode())
+        print("send option login")
         #send account info
         sck.send(username.encode())
         sck.send(password.encode())
@@ -190,17 +189,17 @@ class App(tk.Tk):
             curFrame.label_notice["text"] = "Sign up success"
             self.showPage(StartPage) 
 
-    def show_list_hol(self,curFrame,sck: socket):
-        option = "LIST"
-        sck.send(option.encode()) 
-
-        list_of_hot = sck.recv(1024).decode()
-        list_of_hot = eval(list_of_hot)
-        print(list(list_of_hot))
-    
-    def show_info_ord(self,curFrame,sck: socket):
-        option = "INFO"
-        sck.send(choice.encode())
+    # def show_list_hol(self,curFrame,sck: socket):
+    #     option = "LIST"
+    #     sck.send(option.encode())
+    #
+    #     list_of_hot = sck.recv(1024).decode()
+    #     # list_of_hot = eval(list_of_hot)
+    #     print(list(list_of_hot))
+    #
+    # def show_info_ord(self,curFrame,sck: socket):
+    #     option = "INFO"
+    #     sck.send(choice.encode())
 
         file_of_order = open('data/order.json')
         raw_order_list = json.load(file_of_order)
@@ -317,6 +316,5 @@ sock.connect((HOST, PORT))
 #start_menu()
 
 app = App()
-app.showPage(StartPage)
 app.mainloop()
 sock.close()
