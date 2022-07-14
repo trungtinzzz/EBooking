@@ -32,7 +32,7 @@ def booking_menu(list_of_no):
         else:
             break
         
-def menu():
+def menu(username):
     while True:
         menu_choices = ['0. Exit', '1. Search for room', '2. List of order made', '3. List of hotels']
         for i in menu_choices:
@@ -87,11 +87,13 @@ def menu():
             ans = input('Hotel name: ')
             sock.send(ans.encode())
             list_of_order = eval(sock.recv(1024).decode())
-            if list_of_order == 0:
+            if len(list_of_order) == 0:
                 print('You have not made any order at this hotel')
             else:
-                print(list_of_order)
+                for i in range(len(list_of_order)):
+                    print(i + 1, list_of_order[i])
                 code = input('Choose order to delete: ')
+                code = list_of_order[int(code) - 1]
                 sock.send(code.encode())
                 ans = sock.recv(1024).decode()
                 if ans == 'OK':
@@ -112,13 +114,14 @@ def menu():
         
 def clogin():
     ans = input('Username: ')
+    username = ans
     sock.send(ans.encode())
     ans = input('Password: ')
     sock.send(ans.encode())
     ans = sock.recv(1024).decode()
     if ans == 'OK':
         print('Login success')
-        menu()
+        menu(username)
     else:
         print('Login fail')
 

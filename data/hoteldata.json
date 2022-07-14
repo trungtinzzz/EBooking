@@ -5,28 +5,14 @@
             "kind": 1,
             "des": "Riverside",
             "price": 5,
-            "booked": [
-                {
-                    "booker": "trungtin",
-                    "order_time": "2022-07-14 08:53:30",
-                    "checkin": "2022-08-01",
-                    "checkout": "2022-08-05"
-                }
-            ]
+            "booked": []
         },
         {
             "no": "102",
             "kind": 2,
             "des": "Penthouse",
             "price": 10,
-            "booked": [
-                {
-                    "booker": "hongphuc",
-                    "order_time": "2022-05-03 09:30:23",
-                    "checkin": "2022-10-11",
-                    "checkout": "2022-10-15"
-                }
-            ]
+            "booked": []
         }
     ],
     "hcmue": [

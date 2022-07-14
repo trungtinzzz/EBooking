@@ -106,11 +106,6 @@ def booking_menu(list_of_valid_room, ans, username):
                 "checkin": datetime.datetime.strftime(ans[1], '%Y-%m-%d'),
                 "checkout": datetime.datetime.strftime(ans[2], '%Y-%m-%d')
             }
-            # new_list = []
-            # if username in order_dict:
-            #     new_list = order_dict[username]
-            # new_list.append(new_order)
-            # order_dict[username] = new_list
             order_dict[username][code] = new_order
             for i in hotel_dict[ans[0]]:
                 if i['no'] in list_of_booked:
@@ -168,11 +163,6 @@ def menu_listener(username):
                     key_time = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
                     if (key_time - datetime.datetime.now()).total_seconds() < 24.0 * 3600:
                         client.send('OK'.encode())
-                        # tmp_list = []
-                        # for i in order_dict[username]:
-                        #     if i['order_time'] != key:
-                        #         tmp_list.append(i)
-                        # order_dict[username] = tmp_list
                         order_dict[username].pop(code)
                         with open('data/order.json', 'w') as f:
                             json.dump(order_dict, f, indent = 4)
