@@ -5,12 +5,14 @@ import pickle
 import datetime
 import threading
 HOST = '127.0.0.1'
-PORT = 8003
+PORT = 8004
 
 def login(account_list):
-    print("start login")
     username = client.recv(1024).decode()
+    client.send(username.encode())
     password = client.recv(1024).decode()
+    client.send(password.encode())
+
     for i in account_list:
         if username == i['username'] and password == i['password']:
             client.send('OK'.encode())
@@ -21,12 +23,17 @@ def login(account_list):
 
 def signup(account_list):
     username = client.recv(1024).decode()
+    client.send(username.encode())
     password = client.recv(1024).decode()
+    client.send(password.encode())
     bankno = client.recv(1024).decode()
+    client.send(bankno.encode())
+
     for i in account_list:
         if username == i['username']:
             client.send('Fail'.encode())
             return False
+
     newuser = {'username': username, 'password': password, 'bank account number': bankno}
     account_list.append(newuser)
     f = open('data/account.json', 'w')
@@ -184,7 +191,6 @@ def handleClient(client, addr):
     print('Connected by', addr)
     
     option = client.recv(1024).decode()
-    print(option)
     count = 0
     while(count < 50):
         if option == 'LOGIN':

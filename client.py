@@ -8,7 +8,7 @@ import pickle
 from click import option
 
 HOST = '127.0.0.1'
-PORT = 8003
+PORT = 8004
 
 class StartPage(tk.Frame):
     def __init__(self, parent, appController):
@@ -67,6 +67,7 @@ class SignUpPage(tk.Frame):
 
         button_sign.grid(row= 8, column= 0)
 
+
 class HomePage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
@@ -83,28 +84,28 @@ class HomePage(tk.Frame):
 
         btn_logout.grid(row= 2, column= 0)  
 
-# class ListPage(tk.Frame):
-#     def __init__(self, parent, appController):
-#         tk.Frame.__init__(self, parent)
-#
-#         label_title = tk.Label(self, text="HOTEL LIST", anchor=tk.CENTER)
-#
-#         label_title.grid(row= 0, column= 0)
-#         appController.show_list_hol(self,sock)
-#
-#         btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
-#         btn_quit.grid(row= 1, column=0)
-#
-# class InfoPage(tk.Frame):
-#     def __init__(self, parent, appController):
-#         tk.Frame.__init__(self, parent)
-#
-#         label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
-#         label_title.grid(row= 0, column= 0)
-#
-#         #load account's order data
-#         file_of_order = open('data/order.json')
-#         raw_order_list = json.load(file_of_order)
+class ListPage(tk.Frame):
+    def __init__(self, parent, appController):
+        tk.Frame.__init__(self, parent)
+
+        label_title = tk.Label(self, text="HOTEL LIST", anchor=tk.CENTER)
+
+        label_title.grid(row= 0, column= 0)
+        appController.show_list_hol(self,sock)
+
+        btn_quit = tk.Button(self,text="Back", command=lambda: appController.showPage(HomePage))
+        btn_quit.grid(row= 1, column=0)
+
+class InfoPage(tk.Frame):
+    def __init__(self, parent, appController):
+        tk.Frame.__init__(self, parent)
+
+        label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
+        label_title.grid(row= 0, column= 0)
+
+        #load account's order data
+        file_of_order = open('data/order.json')
+        raw_order_list = json.load(file_of_order)
 
 
 class App(tk.Tk):
@@ -140,17 +141,19 @@ class App(tk.Tk):
         username = curFrame.entry_user.get()
         password = curFrame.entry_pswd.get()
 
-        # if username == "" or password == "":
-        #     curFrame.label_notice["text"] = "Fields cannot be emty"
-        #     return
-        print("start def clogin")
+        if username == "" or password == "":
+            curFrame.label_notice["text"] = "Fields cannot be emty"
+            return
+
         #send cmd option
         option = "LOGIN"
         sck.send(option.encode())
-        print("send option login")
+
         #send account info
         sck.send(username.encode())
+        sck.recv(1024)
         sck.send(password.encode())
+        sck.recv(1024)
 
         #recv login check
         login = sck.recv(1024).decode()
@@ -177,8 +180,11 @@ class App(tk.Tk):
 
         #send account info
         sck.send(username.encode())
+        sck.recv(1024)
         sck.send(password.encode())
+        sck.recv(1024)
         sck.send(bankno.encode())
+        sck.recv(1024)
 
         #recv signup check
         signup = sck.recv(1024).decode()
