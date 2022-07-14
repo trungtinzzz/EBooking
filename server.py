@@ -17,6 +17,12 @@ print('Waiting for connection......')
 client, addr = sock.accept()
 
 
+def sendimage(hotelname, dicthotel):
+    for i in range(len(dicthotel)):
+        f = open('data/'+hotelname+'/'+dicthotel[hotelname][i]['no']+'.jpg','rb')
+        client.send(f.read())
+        
+        
 def checkvalidacc(username, password, bankno):
     if len(username) < 5:
         return False
