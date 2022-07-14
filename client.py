@@ -1,4 +1,6 @@
 from secrets import choice
+from tkinter import *
+from PIL import ImageTk, Image
 import socket
 import datetime
 import pickle
