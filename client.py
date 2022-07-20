@@ -8,7 +8,7 @@ import pickle
 from click import option
 
 HOST = '127.0.0.1'
-PORT = 8004
+PORT = 8000
 
 
 class StartPage(tk.Frame):
@@ -84,6 +84,7 @@ class HomePage(tk.Frame):
 
         btn_list = tk.Button(self, text="HOTEL LIST", command=lambda: appController.showPage(ListPage))
         btn_info = tk.Button(self, text="YOUR BOOKING INFO", command=lambda: appController.showPage(InfoPage))
+        #chinh qua showpage booking hotel
         btn_booking = tk.Button(self, text="BOOKING HOTEL", command=lambda: appController.showPage(StartPage))
 
         # btn_logout = tk.Button(self, text="LOG OUT", command=lambda: appController.showPage(StartPage))
@@ -100,25 +101,30 @@ class ListPage(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         label_title = tk.Label(self, text="HOTEL LIST")
-
         label_title.grid(row=0, column=0)
 
-        appController.show_list(self, sock)
+        cont = 'Emty'
+        #cont = appController.show_list(self, sock)
+        label_cont = tk.Label(self, text=cont)
+        label_cont.grid(row=1, column=0)
 
         btn_quit = tk.Button(self, text="Back", command=lambda: appController.showPage(HomePage))
-        btn_quit.grid(row=1, column=0)
+        btn_quit.grid(row=2, column=0)
 
 
 class InfoPage(tk.Frame):
     def __init__(self, parent, appController):
         tk.Frame.__init__(self, parent)
 
-        label_title = tk.Label(self, text="YOUR BOOKING INFO", anchor=tk.CENTER)
+        label_title = tk.Label(self, text="YOUR BOOKING INFO")
         label_title.grid(row=0, column=0)
 
         #load account's order data
         file_of_order = open('data/order.json')
         raw_order_list = json.load(file_of_order)
+
+        btn_quit = tk.Button(self, text="Back", command=lambda: appController.showPage(HomePage))
+        btn_quit.grid(row=1, column=0)
 
 
 class App(tk.Tk):
@@ -132,20 +138,18 @@ class App(tk.Tk):
         container = tk.Frame()
         container.configure(bg="grey")
 
-        container.pack(side="top", fill = "both", expand = True)
+        container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-
         self.frames = {}
-        for F in (StartPage, HomePage, SignUpPage):
+        for F in (StartPage, HomePage, SignUpPage, ListPage, InfoPage):
             frame = F(container, self)
             frame.grid(row=0, column=0, sticky="nsew")
             self.frames[F] = frame 
 
-
         self.frames[StartPage].tkraise()
-        
+
     def showPage(self, FrameClass):
         self.frames[FrameClass].tkraise()
 
@@ -208,13 +212,18 @@ class App(tk.Tk):
             curFrame.label_notice["text"] = "Sign up success"
             self.showPage(StartPage)
 
-    def show_list(self,curFrame,sck: socket):
-        ans = '3'
-        sck.send(ans.encode())
-        list_of_hot = sck.recv(1024).decode()
-        list_of_hot = eval(list_of_hot)
-        print(list(list_of_hot))
-
+    # def show_list(self,curFrame,sck: socket):
+    #     ans = '3'
+    #     sck.send(ans.encode())
+    #     sck.recv(1024)
+    #     list_of_hot = sck.recv(1024).decode()
+    #     list_of_hot = eval(list_of_hot)
+    #
+    #     n = len(list_of_hot)
+    #     cont = ''
+    #     for i in range(n):
+    #         cont = cont + list_of_hot[i] + '\n'
+    #     return cont
 
 def booking_menu(list_of_no):
     while True:

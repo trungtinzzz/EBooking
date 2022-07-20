@@ -4,7 +4,6 @@ import json
 import pickle
 import datetime
 import threading
-
 HOST = '127.0.0.1'
 PORT = 8000
 
@@ -14,7 +13,7 @@ NUMBERS = '0123456789'
 
 def sendimage(hotelname, dicthotel):
     for i in range(len(dicthotel)):
-        f = open('data/' + hotelname + '/' + dicthotel[hotelname][i]['no'] + '.jpg', 'rb')
+        f = open('data/'+hotelname+'/'+dicthotel[hotelname][i]['no']+'.jpg','rb')
         client.send(f.read())
 
 
@@ -131,12 +130,11 @@ def booking_menu(list_of_valid_room, ans, username):
                 with open('data/order.json', 'w') as f:
                     json.dump(order_dict, f, indent=4)
                 with open('data/hoteldata.json', 'w') as f:
-                    json.dump(hotel_dict, f, indent=4)
+                    json.dump(hotel_dict, f, indent = 4)
             break
         else:
             break
-
-
+        
 def menu_listener(username):
     while True:
         ans = client.recv(1024).decode()
@@ -177,8 +175,8 @@ def menu_listener(username):
                         client.send('OK'.encode())
                         order_dict[username].pop(code)
                         with open('data/order.json', 'w') as f:
-                            json.dump(order_dict, f, indent=4)
-                        # delete in hoteldatajson
+                            json.dump(order_dict, f, indent = 4)
+                        #delete in hoteldatajson
                         f = open('data/hoteldata.json')
                         hotel_dict = json.load(f)
                         f.close()
@@ -189,10 +187,11 @@ def menu_listener(username):
                                     tmp_list.append(j)
                             i['booked'] = tmp_list
                         with open('data/hoteldata.json', 'w') as f:
-                            json.dump(hotel_dict, f, indent=4)
+                            json.dump(hotel_dict, f, indent = 4)
                     else:
                         client.send('Fail'.encode())
         elif ans == '3':
+            client.send(ans.encode())
             f = open('data/hoteldata.json')
             hotel_dict = json.load(f)
             f.close()
@@ -206,21 +205,25 @@ def handleClient(client, addr):
     file_of_account = open('data/account.json')
     raw_account_list = json.load(file_of_account)
     print('Connected by', addr)
-
+    
     option = client.recv(1024).decode()
     count = 0
-    while (count < 50):
+    while(count < 50):
         if option == 'LOGIN':
             username = ''
             check, username = login(raw_account_list)
             if check == True:
                 menu_listener(username)
+            # while not login(raw_account_list):
+            #     login(raw_account_list)
             option = 'X'
         elif option == 'SIGNUP':
             signup(raw_account_list)
+            # while not signup(raw_account_list):
+            #     signup(raw_account_list)
             option = 'X'
         count += 1
-
+    
     print("Client", addr, "finished")
     file_of_account.close()
     client.close()
@@ -232,8 +235,8 @@ sock.listen(2)
 print('Waiting for connection......')
 
 nClient = 0
-# allow up to 50 clients access
-while (nClient < 50):
+#allow up to 50 clients access
+while(nClient < 50):
     client, addr = sock.accept()
 
     thr = threading.Thread(target=handleClient, args=(client, addr))
