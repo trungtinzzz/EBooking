@@ -1,25 +1,15 @@
 {
-  "trungtin": [
-    {
-      "hotel": "hcmue",
-      "order_time": "2022-7-7 9:30:23",
-      "no": [
-        "201"
-      ],
-      "checkin": "2022-11-15",
-      "checkout": "2022-12-20"
-    }
-  ],
-  "hongphuc": [
-    {
-      "hotel": "hcmus",
-      "order_time": "2022-5-3 9:30:23",
-      "no": [
-        "102"
-      ],
-      "checkin": "2022-10-11",
-      "checkout": "2022-10-15"
-    }
-  ],
-  "caoluan": []
+    "trungtin": {
+        "20220713233603": {
+            "hotel": "hcmue",
+            "order_time": "2022-07-13 23:36:03",
+            "no": [
+                "201"
+            ],
+            "checkin": "2022-08-01",
+            "checkout": "2022-08-04"
+        }
+    },
+    "hongphuc": {},
+    "caoluan": {}
 }
